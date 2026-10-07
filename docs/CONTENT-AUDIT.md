@@ -85,3 +85,15 @@ URL resmi diaudit terhadap sumber dan atribut navigasinya. Tes popup memakai fix
 - PRD: `E3AAF395A7B4B84EA48842A1C77DC7A6D565CA9D6AF9944AEB7D6A782020E4B5`
 - Panduan Isi: `1EB6A7594D5521BB3771D1554680C5E764819B3425FC808A21E33449B377D023`
 - Visual Identity: `1A86DC49D6689504EAAAB5E446AAC14456EFC4FBAA4A7C74080D2B33AF3EAAE5`
+
+## Perubahan visual terbaru dari pemilik
+
+Beranda pada revisi terbaru mengikuti file preview_kawankampus.html yang disediakan pemilik. Susunan hero, pita kategori, poster kuis, dan lima kategori bergantian menggantikan komposisi beranda lama. Pesan hero Kuliahmu. Banyak kemungkinan. adalah naskah pemasaran pada referensi terbaru; penjelasan kuis, deskripsi kategori, program, jadwal, persyaratan, dan aturan skor tetap mengikuti sumber PDF. Penutup tetap menegaskan tidak perlu mengikuti semuanya dan mengarahkan ke sumber resmi.
+
+Foto beranda menggantikan dukungan ilustrasi SVG pada beranda atas arahan referensi terbaru pemilik. Palet tetap sesuai identitas Kawan Kampus, dengan foto transparan yang diadaptasi via imagegen. Komponen halaman lainnya, kuis, penyimpanan sesi, dan fitur MVP tidak diperluas oleh kode AI/intro/sharing yang ada dalam file preview.
+
+Arahan pemilik selanjutnya meminta animasi preview diterapkan. Pembuka visual kini diimplementasikan beserta gerakan beranda, pause/resume, keyboard, dan reduced motion. Perubahan ini hanya interaksi presentasi; program, tanggal, persyaratan, kuis, skor/tie-break, dan URL resmi tetap sama.
+
+Arahan pemilik terbaru memindahkan kontrol tema ke footer dan menetapkan Light sebagai default, sehingga mode System dari PRD tidak dipakai. Tagline guideline dihapus dari UI, dan ikon K terpisah diganti huruf k Gold pada wordmark. Ini adalah perubahan eksplisit dari pemilik; fakta program, syarat, periode, URL, dan aturan kuis tidak berubah.
+
+Sumber visual tambahan berasal dari situs resmi program, penyelenggara, atau publikasi resmi kampus, sesuai permintaan pemilik. Semua URL unduhan, halaman sumber, kredit, dan alt text tersimpan di docs/PHOTO-SOURCES.json. Visual yang tidak memiliki materi terverifikasi memakai ilustrasi Kawan Kampus dan tidak diklaim sebagai foto kegiatan program. Judul pengantar kategori mengikuti proposal terbaru; nama program, deskripsi, periode, syarat, URL pendaftaran, pertanyaan, jawaban, skor, dan tie-break tetap dari panduan isi/PRD.

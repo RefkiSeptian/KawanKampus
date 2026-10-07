@@ -27,7 +27,19 @@ export const metadata: Metadata = {
 };
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="id" suppressHydrationWarning className={`${inter.variable} ${montserrat.variable}`}>
+    <html
+      lang="id"
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
+      className={`${inter.variable} ${montserrat.variable}`}
+    >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{if(location.pathname==='/'&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&sessionStorage.getItem('kawan-kampus-welcome-v1')!=='seen'){document.documentElement.dataset.welcomePending='true';}}catch(e){document.documentElement.dataset.welcomePending='true';}})();`,
+          }}
+        />
+      </head>
       <body>
         <ThemeProvider>
           <a href="#main-content" className="skip-link">

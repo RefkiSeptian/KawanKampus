@@ -1,6 +1,6 @@
 export const navigation = [
   { href: '/', label: 'Beranda' },
   { href: '/jelajahi-peluang', label: 'Jelajahi Peluang' },
-  { href: '/kuis', label: 'Kuis Minat' },
   { href: '/tentang', label: 'Tentang' },
+  { href: '/kuis', label: 'Temukan Minatku' },
 ] as const;

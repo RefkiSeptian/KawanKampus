@@ -1,14 +1,31 @@
 'use client';
 import { ThemeProvider as Provider, useTheme } from 'next-themes';
-import { Moon, Sun, Monitor } from 'lucide-react';
-import { useSyncExternalStore } from 'react';
+import { Moon, Sun } from 'lucide-react';
+import { useEffect, useSyncExternalStore } from 'react';
 const subscribe = () => () => {};
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   return (
-    <Provider attribute="class" defaultTheme="system" enableSystem storageKey="kawan-kampus-theme">
+    <Provider
+      attribute="class"
+      defaultTheme="light"
+      enableSystem={false}
+      themes={['light', 'dark']}
+      storageKey="kawan-kampus-theme"
+    >
+      <LegacyThemeMigration />
       {children}
     </Provider>
   );
+}
+function LegacyThemeMigration() {
+  const { theme, setTheme } = useTheme();
+  useEffect(() => {
+    if (theme === 'system') {
+      setTheme('light');
+      document.documentElement.classList.remove('system');
+    }
+  }, [theme, setTheme]);
+  return null;
 }
 export function ThemeControl() {
   const { resolvedTheme, setTheme } = useTheme();
@@ -36,26 +53,6 @@ export function ThemeControl() {
         <Sun className="theme-thumb-sun" size={18} />
         <Moon className="theme-thumb-moon" size={18} />
       </span>
-    </button>
-  );
-}
-
-export function ThemeSystemControl() {
-  const { theme, setTheme } = useTheme();
-  const hydrated = useSyncExternalStore(
-    subscribe,
-    () => true,
-    () => false,
-  );
-  return (
-    <button
-      type="button"
-      className="theme-system-control"
-      onClick={() => setTheme('system')}
-      aria-pressed={hydrated && theme === 'system'}
-    >
-      <Monitor size={14} aria-hidden="true" />
-      Ikuti tema perangkat
     </button>
   );
 }

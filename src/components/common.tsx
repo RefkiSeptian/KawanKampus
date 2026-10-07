@@ -3,17 +3,26 @@ import { ArrowLeft, ArrowRight, ArrowUpRight, ExternalLink, Info } from 'lucide-
 import type { Category, Resource } from '@/types';
 import { site } from '@/data/site';
 import { CategoryIllustration } from './category-illustration';
+import { ProgramVisual } from './program-visual';
+import { categoryPresentation } from '@/data/presentation';
+import { opportunities } from '@/data/opportunities';
 export function CategoryCard({ category, index = 0 }: { category: Category; index?: number }) {
   return (
-    <article className={`category-card category-${index}`}>
+    <article className={`explore-choice-card category-${index}`} data-reveal>
       <div className="card-top">
-        <span className="category-icon">
-          <CategoryIllustration id={category.id} />
-        </span>
-        <span className="card-index">0{index + 1}</span>
+        <span className="card-index">0{index + 1} / 05</span>
+        <CategoryIllustration id={category.id} size={48} />
       </div>
+      <ProgramVisual photo={categoryPresentation[category.id].photo} />
       <h3>{category.name}</h3>
       <p>{category.cardDescription}</p>
+      <small className="category-examples">
+        {opportunities
+          .filter((o) => o.category === category.id)
+          .slice(0, 3)
+          .map((o) => o.name)
+          .join(' · ')}
+      </small>
       <Link className="card-link" href={`/peluang/${category.id}`}>
         Kenali Peluangnya
         <ArrowUpRight size={21} />
@@ -24,10 +33,21 @@ export function CategoryCard({ category, index = 0 }: { category: Category; inde
 }
 export function CategoryGrid({ categories }: { categories: Category[] }) {
   return (
-    <div className="category-grid">
+    <div className="explore-photo-grid">
       {categories.map((category, i) => (
         <CategoryCard key={category.id} category={category} index={i} />
       ))}
+      <article className="explore-quiz-card" data-reveal>
+        <span className="quiz-question-mark" aria-hidden="true">
+          ?
+        </span>
+        <h3>Masih ingin mencoba berbagai hal?</h3>
+        <p>Mulai dari kuis singkat untuk menemukan titik awal.</p>
+        <Link href="/kuis" className="button primary">
+          Temukan Minatku
+          <ArrowRight size={18} />
+        </Link>
+      </article>
     </div>
   );
 }

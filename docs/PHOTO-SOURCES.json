@@ -1,0 +1,74 @@
+[
+  {
+    "id": "aiesec",
+    "url": "https://cdn-expa.aiesec.org/assets/images/aiesec_org/landing-hero.png",
+    "page": "https://aiesec.org/",
+    "credit": "AIESEC",
+    "alt": "Visual komunitas pemuda dari situs resmi AIESEC.",
+    "src": "/images/programs/aiesec.webp"
+  },
+  {
+    "id": "aspire",
+    "url": "https://www.aspireleaders.org/wp-content/uploads/2026/05/IMG_5335-1200x900.jpg",
+    "page": "https://www.aspireleaders.org/program/aspire-leaders-program/",
+    "credit": "Aspire Institute",
+    "alt": "Dokumentasi komunitas Aspire Leaders Program.",
+    "src": "/images/programs/aspire.webp"
+  },
+  {
+    "id": "yli",
+    "url": "https://i0.wp.com/yli.or.id/wp-content/uploads/YLI-Latest-Inspiration-Forum-Leaders.png?fit=1290%2C816&ssl=1",
+    "page": "https://yli.or.id/",
+    "credit": "Young Leaders for Indonesia",
+    "alt": "Dokumentasi forum pemimpin pada situs YLI.",
+    "src": "/images/programs/yli.webp"
+  },
+  {
+    "id": "pimnas",
+    "url": "https://ugm.ac.id/wp-content/uploads/2025/11/Pimnas-38.jpg",
+    "page": "https://ugm.ac.id/id/berita/rektor-lepas-kontingen-ugm-menuju-pimnas-ke-38-di-universitas-hasanuddin/",
+    "credit": "Universitas Gadjah Mada · PIMNAS 38",
+    "alt": "Dokumentasi delegasi PIMNAS 38 dari situs UGM.",
+    "src": "/images/programs/pimnas.webp"
+  },
+  {
+    "id": "brandstorm",
+    "url": "https://www.loreal.com/-/media/project/loreal/brand-sites/corp/master/lcorp/6-careers/2026/brandstrom/2026brandstormwinners.png?rev=18899e807eba4ef7ad1e0562c0ea7525",
+    "page": "https://www.loreal.com/en/brandstorm/",
+    "credit": "L’Oréal Brandstorm",
+    "alt": "Dokumentasi peserta Brandstorm dari situs L’Oréal.",
+    "src": "/images/programs/brandstorm.webp"
+  },
+  {
+    "id": "gemastik",
+    "url": "https://www.its.ac.id/kemahasiswaan/wp-content/uploads/sites/57/2025/11/Finalis-di-Bnadung.jpg",
+    "page": "https://www.its.ac.id/kemahasiswaan/its-juara-umum-ii-gemastik-18/",
+    "credit": "Direktorat Kemahasiswaan ITS · GEMASTIK 2025",
+    "alt": "Dokumentasi kontingen ITS pada GEMASTIK 2025.",
+    "src": "/images/programs/gemastik.webp"
+  },
+  {
+    "id": "hsbc",
+    "url": "https://www.about.hsbc.co.id/-/media/indonesia/images/250825-philantopedia-ep2-image-4-800x495.jpg?sc_lang=en-GB",
+    "page": "https://www.about.hsbc.co.id/sustainability/philantopedia-ep2",
+    "credit": "HSBC Indonesia · Business Case Competition 2025",
+    "alt": "Dokumentasi HSBC Business Case Competition dari situs HSBC Indonesia.",
+    "src": "/images/programs/hsbc.webp"
+  },
+  {
+    "id": "cfa",
+    "url": "https://feb.ui.ac.id/uploads/2026/02/Screenshot_20260227_084132_Instagram.jpg-scaled.jpeg",
+    "page": "https://feb.ui.ac.id/2026/02/27/mahasiswa-feb-ui-raih-juara-nasional-dalam-ajang-cfa-institute-research-challenge/",
+    "credit": "Fakultas Ekonomi dan Bisnis UI · CFA Research Challenge",
+    "alt": "Dokumentasi tim FEB UI pada CFA Institute Research Challenge.",
+    "src": "/images/programs/cfa.webp"
+  },
+  {
+    "id": "bca",
+    "url": "https://www.bca.co.id/-/media/Feature/Banner/Product-Banner/2026/20260728-beasiswa-bakti-bca-bann.jpg",
+    "page": "https://www.bca.co.id/id/tentang-bca/CSR/Bakti-BCA/bakti-pendidikan/beasiswa-bakti-bca",
+    "credit": "BCA · Beasiswa Bakti BCA",
+    "alt": "Visual Beasiswa Bakti BCA dari situs resmi BCA.",
+    "src": "/images/programs/bca.webp"
+  }
+]

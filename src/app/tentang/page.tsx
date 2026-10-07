@@ -1,12 +1,13 @@
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { site } from '@/data/site';
-import { Illustration } from '@/components/illustration';
+import { KMark } from '@/components/brand';
+import { PageMotion } from '@/components/page-motion';
 import { pageMetadata } from '@/lib/metadata';
 export const metadata = pageMetadata('Tentang Kawan Kampus', site.description, '/tentang');
 export default function About() {
   return (
-    <div className="container page-space about-page">
+    <PageMotion className="container page-space about-page">
       <header className="about-hero">
         <div>
           <span className="eyebrow">Teman mengenali kemungkinan</span>
@@ -17,10 +18,13 @@ export default function About() {
           </h1>
           <p>{site.about.description}</p>
         </div>
-        <Illustration kind="journey" />
+        <div className="about-identity-poster" aria-hidden="true">
+          <KMark size={200} />
+          <span>Banyak kemungkinan.</span>
+        </div>
       </header>
       <section className="about-two">
-        <article>
+        <article data-reveal>
           <span className="eyebrow">Untuk siapa?</span>
           <h2>
             Untuk kamu yang
@@ -29,7 +33,7 @@ export default function About() {
           </h2>
           <p>{site.about.audience}</p>
         </article>
-        <article>
+        <article data-reveal>
           <span className="eyebrow">Apa yang kami bantu?</span>
           <h2>
             Arah awal,
@@ -44,7 +48,7 @@ export default function About() {
         <h2>Mulai dari satu kegiatan.</h2>
         <div className="how-grid">
           {site.about.steps.map((step, i) => (
-            <article key={step.title}>
+            <article key={step.title} data-reveal>
               <span className="how-number">0{i + 1}</span>
               <h3>{step.title}</h3>
               <p>{step.description}</p>
@@ -53,13 +57,11 @@ export default function About() {
         </div>
       </section>
       <section className="brand-statement">
-        <span className="small-sun" />
-        <h2>{site.tagline}</h2>
         <Link className="button primary" href="/jelajahi-peluang">
           Jelajahi Peluang
           <ArrowRight size={18} />
         </Link>
       </section>
-    </div>
+    </PageMotion>
   );
 }

@@ -44,7 +44,7 @@ npm run build
 npm run start
 ```
 
-Halaman statis/prerendered dipakai untuk konten, dengan komponen client hanya untuk navigasi, tema, dan kuis. Font Montserrat dan Inter dihosting lokal melalui `next/font/local`; lisensinya disertakan di `src/assets/fonts/`. Semua ilustrasi merupakan SVG orisinal dalam `public/illustrations/`.
+Halaman statis/prerendered dipakai untuk konten, dengan komponen client hanya untuk navigasi, tema, dan kuis. Font Montserrat dan Inter dihosting lokal melalui `next/font/local`; lisensinya disertakan di `src/assets/fonts/`. Ilustrasi SVG orisinal ada di `public/illustrations/`. Beranda mengikuti komposisi HTML preview yang diberikan pemilik: hero dengan foto, pita kategori, pengantar kuis, dan lima kategori bergantian kiri/kanan. Enam foto transparan di `public/images/home/` disesuaikan dengan palet Navy/Gold/Amber menggunakan imagegen, lalu dioptimalkan ke WebP. Asal aset dan prompt dicatat di `docs/HOME-IMAGE-ASSETS.md`.
 
 ## Struktur konten
 
@@ -52,6 +52,8 @@ Halaman statis/prerendered dipakai untuk konten, dengan komponen client hanya un
 - `src/data/opportunities.ts`: seluruh 25 pilihan, jadwal acuan, catatan, URL resmi, dan asal halaman PDF.
 - `src/data/quiz.ts`: empat pertanyaan, 20 jawaban, pemetaan skor, dan naskah kuis.
 - `src/data/site.ts`: naskah umum, footer, Tentang, dan disclaimer.
+- `src/data/home.ts`: naskah pendukung beranda dan pemetaan foto kategori.
+- `src/data/photos.ts` dan `src/data/presentation.ts`: visual program, judul pengantar, kredit, dan tautan sumber; provenance unduhan ada di `docs/PHOTO-SOURCES.json`.
 - `src/data/social.ts`: placeholder URL Instagram dan X. Ganti nilai `null` dengan URL akun resmi; ikon footer otomatis menjadi tautan. Nilai kosong ditampilkan sebagai ikon nonaktif, tanpa alamat yang ditebak.
 - `src/lib/quiz.ts`: fungsi skor, deteksi seri pada batas dua hasil, validasi sesi, dan resolusi hasil.
 - `src/lib/quiz-session.ts`: state sesi browser; kode jawaban tidak ditampilkan di antarmuka.
@@ -69,7 +71,7 @@ Pemeriksaan tersebut membandingkan nama, deskripsi, periode, persyaratan, serta 
 
 Sumber prioritas: PRD → panduan isi → identitas visual → referensi desain yang sudah dikumpulkan → default komponen. Tidak ada scraping desain tambahan. Tidak ada akun, database, CMS, pencarian, filter, bookmark, detail peluang, modal peluang, hasil yang dibagikan, status deadline otomatis, AI rekomendasi, atau GA4.
 
-Kuis memakai `sessionStorage` (`kawan-kampus-quiz-v1`). Progres, jawaban, tahap tie-break, dan hasil bertahan selama sesi browser, termasuk refresh dan navigasi. Jika browser menolak storage, kuis tetap bekerja dalam memori tetapi refresh tidak dapat mempertahankan sesi. Pilihan tema manual tersimpan di `localStorage` (`kawan-kampus-theme`); kunjungan awal memakai tema sistem. Navbar memakai toggle terang/gelap beranimasi, tanpa dropdown. Tombol “Ikuti tema perangkat” di footer mengembalikan mode System. Jawaban dan profil tidak dikirim ke server.
+Kuis memakai `sessionStorage` (`kawan-kampus-quiz-v1`). Progres, jawaban, tahap tie-break, dan hasil bertahan selama sesi browser, termasuk refresh dan navigasi. Jika browser menolak storage, kuis tetap bekerja dalam memori tetapi refresh tidak dapat mempertahankan sesi. Pilihan tema manual tersimpan di `localStorage` (`kawan-kampus-theme`); kunjungan awal memakai tema terang, terlepas dari preferensi perangkat. Toggle terang/gelap beranimasi berada di footer. Menu navbar rata kanan. Mode System tidak tersedia; nilai lama system dimigrasikan ke light. Jawaban dan profil tidak dikirim ke server.
 
 Vercel Analytics dimuat hanya pada build Vercel (`VERCEL=1`), agar endpoint Insights yang khusus hosting tersebut tidak menimbulkan 404 di server lokal. Aktifkan Web Analytics pada dashboard Vercel saat deployment. Tidak ada event custom yang mengirim jawaban kuis.
 
@@ -84,3 +86,5 @@ URL resmi berasal dari anotasi hyperlink pada PDF. Dua kanal kampus yang tidak m
 5. Periksa canonical, sitemap, Open Graph, tema, menu, kuis, dan tautan resmi pada domain final. Perubahan environment metadata memerlukan build baru.
 
 Tidak ada secret, database, atau backend tambahan yang dibutuhkan. `.env.example` mendokumentasikan konfigurasi domain. Rute `/kuis/hasil` tidak diindeks dan tidak dimasukkan ke sitemap karena hasil bersifat sesi.
+
+Animasi beranda mengikuti preview pemilik: layar sambutan dengan tombol Mulai, gerakan hero/label/orbit, panah CTA yang tergambar, pita kategori berulang, dan reveal saat scroll. Pembuka tampil sekali per sesi tab (kawan-kampus-welcome-v1), dapat ditutup dengan Mulai atau Escape, lalu fokus berpindah ke heading beranda. Pita kategori berulang tanpa batas dan terus berjalan saat hover, tanpa tombol jeda. Foto hero ikut mengambang dan merespons gerakan kursor pada desktop; reveal kategori memakai transisi gambar dan teks yang lebih jelas. Reduced motion melewati pembuka dan menghapus animasi; perpindahan preferensi serta tab yang disembunyikan ditangani. Semua konten tetap terlihat jika JavaScript tidak berjalan.

@@ -2,10 +2,9 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ArrowUpRight, Menu, X } from 'lucide-react';
+import { ArrowUpRight, Asterisk, Menu, X } from 'lucide-react';
 import { navigation } from '@/data/navigation';
 import { Brand } from './brand';
-import { ThemeControl } from './theme-provider';
 export function Navigation() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
@@ -58,13 +57,14 @@ export function Navigation() {
               key={item.href}
               href={item.href}
               aria-current={active(item.href) ? 'page' : undefined}
+              className={item.href === '/kuis' ? 'nav-interest' : undefined}
             >
               {item.label}
+              {item.href === '/kuis' && <Asterisk size={22} aria-hidden="true" />}
             </Link>
           ))}
         </nav>
         <div className="nav-actions">
-          <ThemeControl />
           <button
             className="menu-trigger icon-button"
             ref={triggerRef}
@@ -101,16 +101,18 @@ export function Navigation() {
               href={item.href}
               onClick={closeMenu}
               aria-current={active(item.href) ? 'page' : undefined}
+              className={item.href === '/kuis' ? 'nav-interest' : undefined}
             >
               {item.label}
-              <ArrowUpRight size={21} />
+              {item.href === '/kuis' ? (
+                <Asterisk size={22} aria-hidden="true" />
+              ) : (
+                <ArrowUpRight size={21} />
+              )}
             </Link>
           ))}
         </nav>
         <p className="muted">Satu langkah kecil. Banyak kemungkinan.</p>
-        <Link href="/kuis" className="button primary" onClick={closeMenu}>
-          Temukan Minatku <ArrowUpRight size={19} />
-        </Link>
       </dialog>
     </>
   );

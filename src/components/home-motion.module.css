@@ -1,0 +1,267 @@
+.welcome {
+  width: 100vw;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  background: #16202e;
+  color: #faf8f4;
+}
+.welcome:not([open]) {
+  display: none;
+}
+.welcome[open] {
+  display: grid;
+  place-items: center;
+}
+.welcome::backdrop {
+  background: #16202e;
+}
+.welcome[data-leaving='true'] {
+  animation: welcome-exit 650ms cubic-bezier(0.65, 0, 0.2, 1) both;
+  pointer-events: none;
+}
+.collage {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.photo {
+  position: absolute;
+  width: clamp(260px, min(34vw, 54dvh), 540px);
+  aspect-ratio: 4 / 3;
+  --turn: 10deg;
+  transform: rotate(var(--turn));
+  animation:
+    photo-enter 1200ms cubic-bezier(0.16, 1, 0.3, 1) both,
+    photo-drift 7s 1200ms ease-in-out infinite alternate;
+}
+.photo0 {
+  left: -3%;
+  top: 0;
+}
+.photo1 {
+  right: -3%;
+  top: 0;
+  --turn: -10deg;
+}
+.photo2 {
+  left: -2%;
+  bottom: -2%;
+  --turn: -7deg;
+}
+.photo3 {
+  right: -2%;
+  bottom: -2%;
+  --turn: 8deg;
+}
+.photoImage {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
+  mask-image:
+    linear-gradient(to bottom, transparent, #000 7%, #000 68%, transparent),
+    linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  mask-composite: intersect;
+}
+.photoGlow {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: blur(14px);
+  opacity: 0.38;
+  transform: scale(1.04);
+  mask-image: radial-gradient(ellipse at 50% 45%, #000 48%, transparent 85%);
+}
+.sparkOne,
+.sparkTwo {
+  position: absolute;
+  color: #f7bb17;
+  width: 64px;
+  height: 64px;
+  left: 29%;
+  top: 15%;
+  animation: spark-spin 22s linear infinite;
+}
+.sparkTwo {
+  left: auto;
+  top: auto;
+  right: 29%;
+  bottom: 14%;
+  width: 45px;
+  height: 45px;
+}
+.title {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  isolation: isolate;
+  animation: title-enter 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.title::before {
+  content: '';
+  position: absolute;
+  inset: -90px -120px;
+  z-index: -1;
+  background: radial-gradient(ellipse, #16202e 36%, #16202eee 55%, transparent 74%);
+  pointer-events: none;
+}
+.title > svg {
+  margin: 0 auto 24px;
+}
+.title h2 {
+  font-size: clamp(48px, 7vw, 100px);
+  font-weight: 750;
+  letter-spacing: -0.065em;
+  line-height: 1.05;
+  color: #faf8f4;
+}
+.title p {
+  color: #c5ceda;
+  margin-top: 20px;
+  font-size: 16px;
+}
+.start {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  min-width: 170px;
+  min-height: 58px;
+  padding: 16px 28px;
+  border: 0;
+  border-radius: 50px;
+  margin-top: 32px;
+  background: #f7bb17;
+  color: #16202e;
+  font-weight: 650;
+  font-size: 16px;
+  transition: transform 180ms;
+}
+.start:hover {
+  transform: translateY(-3px);
+}
+.start:focus-visible {
+  outline: 3px solid #faf8f4;
+  outline-offset: 7px;
+}
+
+@keyframes title-enter {
+  from {
+    transform: translateY(22px) scale(0.97);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes photo-enter {
+  from {
+    opacity: 0.85;
+    translate: 0 30px;
+    scale: 0.94;
+  }
+  to {
+    opacity: 1;
+    translate: none;
+    scale: 1;
+  }
+}
+@keyframes photo-drift {
+  from {
+    transform: rotate(var(--turn));
+  }
+  to {
+    transform: translateY(-14px) rotate(calc(var(--turn) + 2deg));
+  }
+}
+@keyframes spark-spin {
+  to {
+    rotate: 360deg;
+  }
+}
+@keyframes welcome-exit {
+  to {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}
+@media (max-width: 600px) {
+  .photo {
+    width: clamp(170px, 55vw, 240px);
+  }
+  .photo0 {
+    left: -7%;
+    top: 2%;
+  }
+  .photo1 {
+    right: -7%;
+    top: 2%;
+  }
+  .photo2 {
+    left: -6%;
+    bottom: -1%;
+  }
+  .photo3 {
+    right: -6%;
+    bottom: -1%;
+  }
+  .title h2 {
+    font-size: clamp(38px, 11vw, 62px);
+  }
+  .title > svg {
+    width: 58px;
+    height: 58px;
+    margin-bottom: 18px;
+  }
+  .title p {
+    font-size: 13px;
+    margin-top: 16px;
+  }
+  .title::before {
+    inset: -70px -45px;
+  }
+  .start {
+    min-width: 155px;
+    margin-top: 26px;
+  }
+  .sparkOne {
+    left: 9%;
+    top: 37%;
+    width: 35px;
+    height: 35px;
+  }
+  .sparkTwo {
+    right: 9%;
+    bottom: 34%;
+    width: 30px;
+    height: 30px;
+  }
+
+  .photoGlow {
+    filter: blur(9px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .welcome,
+  .title,
+  .photo,
+  .sparkOne,
+  .sparkTwo {
+    animation: none !important;
+  }
+  .start {
+    transition: none;
+  }
+}
+.title h2 .brand-wordmark {
+  display: block;
+  width: min(700px, 86vw);
+  height: auto;
+  margin-inline: auto;
+}

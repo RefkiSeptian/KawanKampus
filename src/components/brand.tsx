@@ -20,12 +20,37 @@ export function Brand({ footer = false }: { footer?: boolean }) {
       className={`brand ${footer ? 'brand-footer' : ''}`}
       aria-label="Kawan Kampus — Beranda"
     >
-      <KMark />
-      <span className="brand-wordmark">
-        <strong>kawan</strong>
-        <span>kampus</span>
-        <span className="brand-dot">.</span>
-      </span>
+      <BrandWordmark />
     </Link>
+  );
+}
+export function BrandWordmark() {
+  return (
+    <svg
+      className="brand-wordmark"
+      viewBox="0 0 280 56"
+      width="175"
+      height="34"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path fill="#F7BB17" d="M0 5h9v16L24 5h13L18 27H0V5Z M0 31h18l19 22H24L9 37v16H0V31Z" />
+      <text
+        x="35"
+        y="43"
+        fill="currentColor"
+        fontFamily="var(--font-inter), sans-serif"
+        fontSize="50"
+        letterSpacing="-3"
+        textLength="245"
+        lengthAdjust="spacingAndGlyphs"
+      >
+        <tspan fontWeight="800">awan</tspan>
+        <tspan fontWeight="400">kampus</tspan>
+        <tspan fill="#F7BB17" fontWeight="700">
+          .
+        </tspan>
+      </text>
+    </svg>
   );
 }

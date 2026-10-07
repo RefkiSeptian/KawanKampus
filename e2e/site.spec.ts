@@ -10,6 +10,17 @@ const routes = [
   '/kuis/hasil',
   '/tentang',
 ];
+
+test.beforeEach(async ({ page }) => {
+  // Product journeys start after the separately tested welcome experience.
+  await page.addInitScript(() => {
+    try {
+      sessionStorage.setItem('kawan-kampus-welcome-v1', 'seen');
+    } catch {
+      /* Restricted storage. */
+    }
+  });
+});
 test('every route, its content, internal links, and responsive layout work', async ({
   page,
   request,
@@ -26,8 +37,20 @@ test('every route, its content, internal links, and responsive layout work', asy
     await expect(page.locator('.closing-banner')).toHaveCount(route === '/' ? 1 : 0);
     await expect(page.locator('.hero-copy .pill-eyebrow')).toHaveCount(0);
     await expect(page.locator('.site-header')).toHaveCSS('backdrop-filter', /blur\(/);
-    if (route === '/')
-      await expect(page.locator('.category-card').first()).toHaveCSS('backdrop-filter', /blur\(/);
+    if (route === '/') {
+      await expect(page.locator('.home-category-row')).toHaveCount(5);
+      for (const category of categories) {
+        await expect(
+          page.getByRole('link', { name: `Kenali Peluangnya : ${category.name}`, exact: true }),
+        ).toHaveAttribute('href', `/peluang/${category.id}`);
+      }
+      for (const image of await page.locator('.home-category-visual img').all()) {
+        await image.scrollIntoViewIfNeeded();
+        await expect
+          .poll(() => image.evaluate((node) => (node as HTMLImageElement).naturalWidth))
+          .toBeGreaterThan(0);
+      }
+    }
     await expect(page.locator('footer')).not.toContainText(
       'Kawan Kampus menggunakan analitik anonim',
     );
@@ -79,7 +102,7 @@ test('primary quiz journey restores progress, reaches a category and opens offic
   context,
 }) => {
   await page.goto('/');
-  await page.getByRole('link', { name: 'Temukan Minatku', exact: true }).click();
+  await page.locator('main').getByRole('link', { name: 'Temukan Minatku', exact: true }).click();
   await page
     .getByRole('radio', { name: 'Mencoba tugas dari pekerjaan yang membuatku penasaran.' })
     .check();
@@ -100,9 +123,8 @@ test('primary quiz journey restores progress, reaches a category and opens offic
   ).toBeVisible();
   await expect(page.getByRole('link', { name: /Jelajahi Beasiswa/ })).toBeVisible();
   await page.getByRole('link', { name: 'Kenali Dunia Kerja', exact: true }).click();
-  await expect(
-    page.getByRole('heading', { name: 'Magang & Kenali Dunia Kerja', exact: true }),
-  ).toBeVisible();
+  await expect(page).toHaveURL(/\/peluang\/dunia-kerja$/);
+  await expect(page.locator('.category-identity')).toHaveText('Magang & Kenali Dunia Kerja');
   // Verify external navigation deterministically without relying on a third-party site.
   await context.route('https://www.theforage.com/**', (route) =>
     route.fulfill({
@@ -176,23 +198,31 @@ test('all unknown answers produce no forced recommendation and keep scholarships
   await expect(page.locator('.result-card')).toHaveCount(0);
   await expect(page.getByRole('link', { name: /Jelajahi Beasiswa/ })).toBeVisible();
 });
-test('light, dark, system preference and persisted manual theme work', async ({ page }) => {
+test('light is the default and footer theme selection persists independently of the OS', async ({
+  page,
+}) => {
   await page.emulateMedia({ colorScheme: 'dark' });
   await page.goto('/');
-  await expect(page.locator('html')).toHaveClass(/dark/);
+  await expect(page.locator('html')).not.toHaveClass(/dark/);
+  await expect(page.locator('.site-header [role="switch"]')).toHaveCount(0);
+  await expect(page.locator('footer [role="switch"]')).toHaveCount(1);
   await page.getByRole('switch', { name: 'Mode gelap' }).click();
-  await expect(page.locator('html')).not.toHaveClass(/dark/);
+  await expect(page.locator('html')).toHaveClass(/dark/);
   await page.reload();
-  await expect(page.locator('html')).not.toHaveClass(/dark/);
+  await expect(page.locator('html')).toHaveClass(/dark/);
   await page.getByRole('switch', { name: 'Mode gelap' }).focus();
   await page.keyboard.press('Space');
-  await expect(page.locator('html')).toHaveClass(/dark/);
-  await expect(page.getByRole('switch', { name: 'Mode gelap' })).toBeChecked();
-  await page.getByRole('button', { name: 'Ikuti tema perangkat' }).click();
+  await expect(page.locator('html')).not.toHaveClass(/dark/);
   await page.emulateMedia({ colorScheme: 'light' });
   await expect(page.locator('html')).not.toHaveClass(/dark/);
   await page.emulateMedia({ colorScheme: 'dark' });
-  await expect(page.locator('html')).toHaveClass(/dark/);
+  await expect(page.locator('html')).not.toHaveClass(/dark/);
+  await page.evaluate(() => localStorage.setItem('kawan-kampus-theme', 'system'));
+  await page.reload();
+  await expect(page.locator('html')).not.toHaveClass(/dark/);
+  await expect
+    .poll(() => page.evaluate(() => localStorage.getItem('kawan-kampus-theme')))
+    .toBe('light');
 });
 test('keyboard quiz, skip link and mobile menu remain accessible', async ({ page }, testInfo) => {
   await page.goto('/');
@@ -215,6 +245,8 @@ test('keyboard quiz, skip link and mobile menu remain accessible', async ({ page
   await expect(page.getByText('2 dari 4', { exact: true })).toBeVisible();
 });
 test('core pages meet automated accessibility checks in both themes', async ({ page }) => {
+  // Audit the settled presentation; motion and pause behavior have separate checks.
+  await page.emulateMedia({ reducedMotion: 'reduce' });
   for (const theme of ['light', 'dark'])
     for (const route of [
       '/',

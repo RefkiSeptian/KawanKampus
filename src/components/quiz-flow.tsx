@@ -103,7 +103,7 @@ export function QuizFlow() {
           <ArrowUpRightIcon />
         </Link>
       </aside>
-      <section className="quiz-panel" aria-label="Kuis minat">
+      <section className="quiz-panel" aria-label="Kuis minat" data-reveal>
         <div className="quiz-progress-heading">
           <span>
             {state.phase === 'tie' ? 'Satu pilihan terakhir' : `${state.step + 1} dari 4`}
@@ -221,9 +221,7 @@ export function QuizFlow() {
             </div>
           </>
         )}
-        <p className="quiz-storage-note">
-          Jawaban tersimpan selama sesi browser.
-        </p>
+        <p className="quiz-storage-note">Jawaban tersimpan selama sesi browser.</p>
       </section>
     </div>
   );

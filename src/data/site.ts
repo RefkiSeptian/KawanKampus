@@ -3,7 +3,6 @@ export const site = {
   description:
     'Panduan awal untuk mengenali kegiatan, memilih hal yang ingin dicoba, dan menemukan sumber resmi peluang selama kuliah.',
   footerDescription: 'Teman mengenali peluang selama kuliah.',
-  tagline: 'Matahari terbit dari Sumsel, bersinar di seluruh Indonesia.',
   scheduleDisclaimer: 'Jadwal dapat berubah. Cek sumber resmi sebelum mendaftar.',
   contactUrl: null,
   home: {

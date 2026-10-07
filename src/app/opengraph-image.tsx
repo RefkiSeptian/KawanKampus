@@ -1,6 +1,5 @@
 import { ImageResponse } from 'next/og';
-import { KMark } from '@/components/brand';
-export const alt = 'Kawan Kampus — Kuliah baru mulai. Yuk, kenali peluangnya.';
+export const alt = 'Kawan Kampus — Kuliahmu. Banyak kemungkinan.';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 export default function OgImage() {
@@ -19,9 +18,9 @@ export default function OgImage() {
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 14, fontSize: 40 }}>
-        <KMark size={48} />
         <span style={{ display: 'flex' }}>
-          <span style={{ fontWeight: 800 }}>kawan</span>
+          <span style={{ fontWeight: 800, color: '#F7BB17' }}>k</span>
+          <span style={{ fontWeight: 800 }}>awan</span>
           <span style={{ fontWeight: 400 }}>kampus</span>
           <span style={{ color: '#F7BB17' }}>.</span>
         </span>
@@ -35,8 +34,8 @@ export default function OgImage() {
           lineHeight: 1.05,
         }}
       >
-        <span>Kuliah baru mulai.</span>
-        <span>Yuk, kenali peluangnya.</span>
+        <span>Kuliahmu.</span>
+        <span>Banyak kemungkinan.</span>
       </div>
       <div
         style={{

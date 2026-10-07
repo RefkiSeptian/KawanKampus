@@ -1,12 +1,12 @@
 # Kawan Kampus — QA final
 
-7 Oktober 2026. Proyek: `C:\UI\Project\KawanKampus`. Belum dideploy. Preview produksi lokal: http://127.0.0.1:3000.
+7 Oktober 2026. Proyek: `C:\UI\Project\KawanKampus`. Belum dideploy. Preview development lokal: http://127.0.0.1:3000.
 
 | Pemeriksaan            | Hasil                                                                                                       |
 | ---------------------- | ----------------------------------------------------------------------------------------------------------- |
 | `npm run lint`         | Lulus; ESLint TypeScript, React Hooks, JSX accessibility + TypeScript strict; tanpa warning/error           |
 | `npm run test`         | 24 tes unit/komponen lulus, termasuk seluruh 625 kombinasi jawaban kuis                                     |
-| `npm run test:e2e`     | 16 tes lulus: desktop 1440 × 1000 dan mobile 390 × 844                                                      |
+| `npm run test:e2e`     | 22 tes lulus: desktop 1440 × 1000 dan mobile 390 × 844                                                      |
 | `npm run build`        | Lulus; 10 route wajib dan metadata routes terbangun; TypeScript lulus                                       |
 | `npm audit`            | 0 kerentanan pada semua dependency termasuk development                                                     |
 | Audit konten           | 25 peluang; 5 per kategori; 100 field sumber cocok; 4 pertanyaan dan 20 jawaban cocok; provenance URL cocok |
@@ -32,7 +32,7 @@ Laporan mentah HTML/JSON tersedia di `work/lighthouse/`. Screenshot visual dan h
 - Perjalanan Home → Kuis → Hasil → Kategori → external CTA lulus. External popup memakai fixture jaringan untuk pemeriksaan yang deterministik.
 - Progres, jawaban, dan pemilihan tie-break bertahan saat refresh. Tie-break tidak memaksakan urutan kode; pengguna memilih jumlah kategori sesuai sisa tempat. Hasil maksimal dua kategori positif.
 - “Belum tahu” semua tidak menghasilkan kategori paksa. Beasiswa tetap menjadi pelengkap. Ulangi Kuis membersihkan sesi. Hasil kosong memberi jalur kembali ke kuis.
-- Tema mengikuti sistem pada kunjungan pertama; manual Light/Dark tersimpan setelah refresh; mode System mengikuti perubahan preferensi OS.
+- Tema awal selalu Light; pilihan manual Light/Dark di footer tersimpan setelah refresh; nilai System lama dimigrasikan ke Light.
 - Quiz radio dan kontrol dapat dipakai dengan keyboard; skip link bekerja; dialog menu mendukung Escape dan pemulihan fokus.
 - Komposisi desktop, mobile, dark mode, halaman kategori, dan kuis diperiksa melalui screenshot; tidak ditemukan teks bertumpuk atau elemen terpotong yang menghambat penggunaan.
 
@@ -73,3 +73,57 @@ Sesuai arahan terbaru pemilik, seluruh keterangan tanpa akun di antarmuka dihapu
 ## Revisi kartu ajakan kuis pada Jelajahi Peluang
 
 Kartu kotak dengan ikon outline diganti panel kaca beradius 30 px (26 px di mobile), border utuh, padding konsisten, ilustrasi kompas SVG, hierarki heading/teks, dan tombol pill Gold menuju Kuis. Pada tablet/mobile, ilustrasi berada di samping teks dan tombol mendapat ruang terpisah. Copy utama tetap Belum punya pilihan? / Tidak apa-apa. Pemeriksaan terang/gelap dan lebar 1440, 1024, 768, 390, serta 360 px tidak menemukan overflow atau error browser; tombol berhasil menuju /kuis.
+
+## Revisi beranda berdasarkan HTML preview pemilik
+
+Beranda kini mengikuti preview_kawankampus.html: hero foto dengan tipografi besar dan label ringan, pita lima kategori, poster pengantar kuis, kategori bergantian kiri/kanan dengan foto, dan penutup Navy selebar layar. Palet tetap Linen #FAF8F4, Navy #16202E, Gold #F7BB17, Amber #F3A52D, dan Slate #5A6675. Navbar kaca, logo K, tema, dan footer ringkas mengikuti revisi sebelumnya.
+
+Enam foto transparan dari preview diadaptasi dengan built-in imagegen dan disimpan sebagai WebP lokal (sekitar 0,47 MB total). Foto digunakan atas permintaan referensi terbaru pemilik; ilustrasi SVG tetap dipakai di halaman lain. Naskah pendukung beranda dan pemetaan foto terpusat di src/data/home.ts. Deskripsi kategori, 25 program, URL resmi, 4 pertanyaan/20 jawaban, skor/tie-break, dan perilaku sesi tetap mengikuti sumber. Audit mekanis konten kembali lulus tanpa kegagalan.
+
+Pemeriksaan visual production pada 1440, 1024, 768, 390, dan 360 px dalam tema terang/gelap tidak menemukan overflow atau error browser. Beranda tidak mengimpor pembatasan route, welcome overlay, berbagi hasil, atau fitur AI dalam file preview; ruang lingkup fungsional tetap sesuai PRD. Open Graph memakai judul baru yang konsisten dengan hero.
+
+Validasi akhir revisi beranda: npm run lint (route typegen, ESLint, TypeScript), 24 tes unit/komponen, 16 tes E2E desktop/mobile, dan npm run build lulus. Lighthouse production terbaru: mobile 96/100/100/100; desktop 100/100/100/100. Semua enam foto berhasil dimuat; lima CTA kategori menuju slug yang benar. Server pemeriksaan sementara ditutup setelah selesai.
+
+## Revisi animasi dari HTML preview
+
+Gerakan preview kini diimplementasikan melalui HomeMotion: pembuka dengan kolase dan tombol Mulai, transisi hero setelah pembuka, panah CTA yang tergambar, label mengambang, orbit/badge bergerak, pita kategori berulang, bintang berputar, dan reveal saat scroll. Isi tetap Server Components; komponen client menangani modal dan observasi visibilitas saja.
+
+Pembuka dapat ditutup dengan Mulai atau Escape, memindahkan fokus ke heading, dan tidak berulang pada sesi tab yang sama setelah ditutup. Native dialog menjaga fokus/inert. Tombol jeda pada pita menghentikan gerakan dekoratif; animasi berhenti ketika tab tidak terlihat. Reduced motion melewati pembuka, meniadakan gerakan, menampilkan konten secara statis, serta ditangani bila preferensi berubah saat halaman terbuka. JavaScript yang dinonaktifkan tidak menyembunyikan konten halaman.
+
+Lint/TypeScript, 24 unit/komponen, 20 E2E desktop/mobile, dan build produksi lulus. Empat E2E baru memeriksa pembuka, keyboard/fokus, sesi, perubahan transform pita, pause/resume, scroll reveal, serta reduced motion. Audit axe pada modal diuji dalam mode bergerak; audit semua halaman memakai reduced motion agar menilai presentasi setelah transisi, bukan frame opacity sementara.
+
+Pemeriksaan visual pembuka/animasi pada 1440, 1024, 768, 390, dan 360 px tidak menemukan overflow atau error browser. Frame berulang membuktikan gerakan pita/label, transisi pembuka, dan reveal. Cuplikan GIF diekspor dari browser. Lighthouse first visit dengan pembuka dan animasi aktif: mobile 92/100/100/100, desktop 100/100/100/100. Server pemeriksaan port 3200 ditutup; server development milik pemilik proyek pada port 3000 tetap berjalan.
+
+## Revisi ukuran dan tepi foto pembuka
+
+Empat foto kolase pembuka kini berukuran responsif dengan batas desktop 540 px serta menyesuaikan tinggi viewport; mobile memakai 55vw dengan batas 170–240 px. Foto digeser lebih dekat ke dalam sudut layar. Lapisan foto utama tetap tajam; mask vertikal/horizontal memudarkan tepinya. Salinan foto yang sama diberi blur 14 px (9 px di mobile), opacity rendah, dan radial mask untuk melembutkan peralihan ke Navy. Tidak ada pengubahan ulang aset foto atau tambahan gambar yang berbeda; dua lapisan memakai URL identik.
+
+Lint/TypeScript, build produksi pada server E2E, dan 20 E2E desktop/mobile lulus. Visual pembuka diperiksa pada 1920, 1440, 1024, 390, dan 360 px: mask dan blur aktif, tidak ada overflow, semua foto dimuat, tombol Mulai tetap bekerja, tidak ada error browser.
+
+Lighthouse setelah revisi tepi foto: mobile 93/100/100/100 dan desktop 100/100/100/100 (Performance/Accessibility/Best Practices/SEO). Server pemeriksaan sementara ditutup setelah verifikasi.
+
+## Revisi gerakan beranda tanpa tombol jeda
+
+Sesuai arahan pemilik, tombol jeda pada pita dihapus. Pita memakai loop infinite 24 detik dan tidak berhenti saat hover. Gerakan foto hero bertambah menjadi floating vertikal dengan tilt ringan serta parallax kursor desktop; label bergerak 16 px, orbit lebih terasa, badge berayun, dan bintang berputar lebih cepat. Hero masuk dari jarak lebih jauh. Gambar dan teks kategori masuk bergantian dari kiri/kanan dengan transisi yang bertahap.
+
+Reduced motion tetap tersedia melalui preferensi perangkat; animasi berhenti sementara saat tab tidak terlihat dan melanjutkan ketika kembali aktif. Kuis, sesi, warna, foto, dan naskah program tidak berubah. Lint/TypeScript dan build produksi lulus. Seluruh 20 E2E lulus; tes gerakan memeriksa loop infinite, pergerakan ketika hover, foto hero yang bergerak, serta tidak adanya kontrol jeda. Pemeriksaan visual pada 1440, 1024, 768, 390, dan 360 px tidak menemukan overflow atau error browser. Cuplikan terbaru: homepage-motion-strong.gif.
+
+## Revisi hover, navbar, tema, dan wordmark
+
+Hover pada seluruh baris kategori kini memberi latar hangat, bayangan, lift panel, zoom 7,5% dengan tilt gambar, dan panah bergerak. Efek juga merespons focus-within dan tetap menghormati reduced motion. Menu desktop rata kanan. Toggle tema hanya ada di footer, menggantikan kontrol System. Default pertama selalu Light meski OS memakai Dark; pilihan Light/Dark manual tetap tersimpan. Nilai System dari versi lama dimigrasikan ke Light.
+
+Tagline yang diminta pemilik dihapus dari semua tampilan dan data situs. Wordmark kini diawali huruf k Gold yang menyatu dengan awan tebal serta kampus tipis, tanpa ikon K terpisah. Branding navbar/footer, pembuka, serta Open Graph konsisten; favicon K tetap menjadi ikon tab. Logo berupa SVG dekoratif dengan label nama brand yang aksesibel pada elemen pembungkus.
+
+Navbar/footer serta hover diperiksa pada desktop dan mobile: nol toggle di header, satu toggle di footer, nol tagline, nol overflow/error browser. Lighthouse produksi terbaru mobile 91/100/100/100 dan desktop 100/100/100/100. Foto utama ditampilkan langsung; gerakan foto dimulai setelah tombol Mulai atau interaksi pengguna agar pemuatan awal tetap ringan. Konten program dan scoring kuis tetap sama.
+
+## Revisi berdasarkan proposal dan lampiran terbaru
+
+Proposal dibaca lengkap melalui OOXML dan seluruh gambar lampiran diperiksa. Layout proposal mengendalikan komposisi halaman, sementara palet tetap Linen, Navy, Gold, Amber, dan Slate. Router dan aturan PRD tetap sama; rekomendasi AI/direktori/sharing dalam proposal bukan permintaan implementasi pada revisi ini.
+
+Pita kini terdiri dari enam grup identik dan bergerak tepat selebar satu grup setiap siklus, sehingga tetap menutup viewport saat loop mendekati akhir. Cover awal disiapkan oleh bootstrap head dan CSS sebelum bundle client: tests menahan unduhan JavaScript dan membuktikan cover tetap berada di depan. Modal lalu dibuka pada layout effect untuk menghindari kilatan beranda. K geometris khas kini menyatu sebagai huruf pertama pada wordmark. Navbar mengikuti susunan Beranda, Jelajahi Peluang, Tentang, Temukan Minatku; CTA terakhir memiliki pill outline dan simbol bintang.
+
+Jelajahi memakai grid tiga kolom/lima kategori plus satu kartu kuis. Pengantar kategori memakai judul proposal dan panel foto besar. Kartu peluang memiliki visual, kredit, dan tautan sumber. Sembilan aset resmi disimpan lokal dengan provenance lengkap dalam docs/PHOTO-SOURCES.json; bahan resmi yang tidak tersedia menggunakan ilustrasi yang ditandai. Halaman kategori, Explore, Tentang, Kuis, dan Hasil mendapat reveal/hover dan dekorasi gerak dengan reduced motion. Konten dan scoring kuis tidak berubah.
+
+Lint/TypeScript, 24 unit/komponen, dan 22 E2E lulus. Build produksi server E2E lulus. Audit sumber: 25 program, 4 pertanyaan/20 jawaban, nol kegagalan. Pemeriksaan terang/gelap dan viewport 1920,1440,1024,768,390,360 px: nol overflow atau error browser; semua visual termuat.
+
+Lighthouse setelah revisi proposal: mobile 91/100/100/100 dan desktop 100/100/100/100 (Performance/Accessibility/Best Practices/SEO). Server pemeriksaan sementara port 3200 ditutup setelah verifikasi; server development pemilik pada port 3000 tidak dihentikan.

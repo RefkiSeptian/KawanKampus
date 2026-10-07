@@ -3,7 +3,7 @@ import { site } from '@/data/site';
 import { socialLinks } from '@/data/social';
 import { navigation } from '@/data/navigation';
 import { Brand } from './brand';
-import { ThemeSystemControl } from './theme-provider';
+import { ThemeControl } from './theme-provider';
 export function Footer() {
   return (
     <footer className="site-footer">
@@ -11,7 +11,6 @@ export function Footer() {
         <div className="footer-brand">
           <Brand footer />
           <p>{site.footerDescription}</p>
-          <span className="footer-tagline">{site.tagline}</span>
         </div>
         <nav className="footer-nav" aria-label="Navigasi footer">
           {navigation.map((item) => (
@@ -51,7 +50,7 @@ export function Footer() {
       </div>
       <div className="container footer-bottom">
         <small>© {new Date().getFullYear()} Kawan Kampus</small>
-        <ThemeSystemControl />
+        <ThemeControl />
       </div>
     </footer>
   );

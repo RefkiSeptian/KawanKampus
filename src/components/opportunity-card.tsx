@@ -1,6 +1,8 @@
 import { CalendarDays, ArrowUpRight, Info } from 'lucide-react';
 import type { Opportunity } from '@/types';
 import { ExternalResource } from './common';
+import { ProgramVisual } from './program-visual';
+import { opportunityPhoto } from '@/data/presentation';
 export function OpportunityCard({
   opportunity,
   index,
@@ -9,7 +11,8 @@ export function OpportunityCard({
   index: number;
 }) {
   return (
-    <article className="opportunity-card" data-opportunity-id={opportunity.id}>
+    <article className="opportunity-card" data-opportunity-id={opportunity.id} data-reveal>
+      <ProgramVisual photo={opportunityPhoto(opportunity.id, opportunity.category)} />
       <div className="opportunity-top">
         <span className="type-label">{opportunity.type}</span>
         <span className="card-index">0{index + 1}</span>

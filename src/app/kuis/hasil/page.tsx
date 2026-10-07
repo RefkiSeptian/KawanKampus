@@ -1,5 +1,6 @@
 import { QuizResult } from '@/components/quiz-flow';
 import { pageMetadata } from '@/lib/metadata';
+import { PageMotion } from '@/components/page-motion';
 export const metadata = {
   ...pageMetadata(
     'Hasil Kuis',
@@ -10,8 +11,8 @@ export const metadata = {
 };
 export default function ResultPage() {
   return (
-    <div className="container page-space result-page">
+    <PageMotion className="container page-space result-page">
       <QuizResult />
-    </div>
+    </PageMotion>
   );
 }

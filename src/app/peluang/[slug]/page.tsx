@@ -4,7 +4,9 @@ import { ArrowUpRight } from 'lucide-react';
 import { categories, getCategory } from '@/data/categories';
 import { opportunities } from '@/data/opportunities';
 import { Breadcrumb, ExternalResource, ScheduleNote } from '@/components/common';
-import { CategoryIllustration } from '@/components/category-illustration';
+import { ProgramVisual } from '@/components/program-visual';
+import { PageMotion } from '@/components/page-motion';
+import { categoryPresentation } from '@/data/presentation';
 import { OpportunityCard } from '@/components/opportunity-card';
 import { pageMetadata } from '@/lib/metadata';
 export const dynamicParams = false;
@@ -23,27 +25,20 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
   if (!category) notFound();
   const choices = opportunities.filter((item) => item.category === slug);
   return (
-    <div className={`container page-space category-page ${slug}`}>
+    <PageMotion className={`container page-space category-page ${slug}`}>
       <Breadcrumb label={category.shortName} />
       <header className="category-hero">
         <div>
           <span className="eyebrow">{category.eyebrow}</span>
-          <h1>{category.name}</h1>
+          <span className="category-identity">{category.name}</span>
+          <h1>{categoryPresentation[category.id].heading}</h1>
           <p>{category.introduction}</p>
           <a href="#pilihan" className="text-link">
             Lihat contoh peluang
             <ArrowUpRight size={18} />
           </a>
         </div>
-        <div className="category-hero-art" aria-hidden="true">
-          <div className="category-symbol">
-            <CategoryIllustration id={category.id} size={180} />
-          </div>
-          <span className="symbol-spark one">✳</span>
-          <span className="symbol-spark two">✦</span>
-          <span className="symbol-orbit" />
-          <span className="symbol-label">Mulai dari rasa penasaran</span>
-        </div>
+        <ProgramVisual photo={categoryPresentation[category.id].photo} hero />
       </header>
       <section className="category-types" aria-labelledby="types-title">
         <div className="types-heading">
@@ -52,7 +47,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
         </div>
         <div className="types-grid">
           {category.types.map((type, i) => (
-            <article key={type.title}>
+            <article key={type.title} data-reveal>
               <span className="type-number">0{i + 1}</span>
               <div>
                 <h3>{type.title}</h3>
@@ -104,6 +99,6 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
           <ArrowUpRight size={18} />
         </Link>
       </div>
-    </div>
+    </PageMotion>
   );
 }
