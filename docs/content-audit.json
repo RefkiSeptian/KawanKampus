@@ -1,0 +1,290 @@
+{
+  "source": "C:\\Users\\refki\\Documents\\Codex\\2026-10-07\\https-www-finku-id-id-https\\work\\source-documents\\content.txt",
+  "opportunityCount": 25,
+  "categoryCounts": {
+    "organisasi-kepemimpinan": 5,
+    "lomba-kompetisi": 5,
+    "beasiswa-bantuan-kuliah": 5,
+    "pengalaman-internasional": 5,
+    "dunia-kerja": 5
+  },
+  "officialLinks": 23,
+  "missingUrls": [
+    "kampus-organisasi",
+    "kampus-bantuan"
+  ],
+  "opportunities": [
+    {
+      "name": "Organisasi dan kepanitiaan di kampusmu",
+      "description": true,
+      "timing": true,
+      "note": true,
+      "id": "kampus-organisasi",
+      "sourcePage": 4,
+      "url": null
+    },
+    {
+      "name": "AIESEC",
+      "description": true,
+      "timing": true,
+      "note": true,
+      "id": "aiesec",
+      "sourcePage": 4,
+      "url": "https://aiesec.org/membership"
+    },
+    {
+      "name": "Aspire Leaders Program",
+      "description": true,
+      "timing": true,
+      "note": true,
+      "id": "aspire",
+      "sourcePage": 4,
+      "url": "https://www.aspireleaders.org/program/aspire-leaders-program/"
+    },
+    {
+      "name": "StudentsCatalyst",
+      "description": true,
+      "timing": true,
+      "note": true,
+      "id": "studentscatalyst",
+      "sourcePage": 5,
+      "url": "https://www.linkedin.com/company/studentscatalyst/"
+    },
+    {
+      "name": "Young Leaders for Indonesia",
+      "description": true,
+      "timing": true,
+      "note": true,
+      "id": "yli",
+      "sourcePage": 5,
+      "url": "https://yli.or.id/registration-program/"
+    },
+    {
+      "name": "PIMNAS melalui PKM",
+      "description": true,
+      "timing": true,
+      "note": true,
+      "id": "pimnas",
+      "sourcePage": 7,
+      "url": "https://simbelmawa.kemdiktisaintek.go.id/portal/"
+    },
+    {
+      "name": "L’Oréal Brandstorm",
+      "description": true,
+      "timing": true,
+      "note": true,
+      "id": "brandstorm",
+      "sourcePage": 8,
+      "url": "https://brandstorm2026.loreal.com/en"
+    },
+    {
+      "name": "GEMASTIK",
+      "description": true,
+      "timing": true,
+      "note": true,
+      "id": "gemastik",
+      "sourcePage": 8,
+      "url": "https://kompetisicerdas.kemdiktisaintek.go.id/gemastik/"
+    },
+    {
+      "name": "HSBC Indonesia Business Case Competition",
+      "description": true,
+      "timing": true,
+      "note": true,
+      "id": "hsbc",
+      "sourcePage": 8,
+      "url": "https://www.about.hsbc.co.id/-/media/indonesia/en-id/hsbc-in-indonesia/community/231020-hsbc-business-case-competition-id.pdf"
+    },
+    {
+      "name": "CFA Institute Research Challenge",
+      "description": true,
+      "timing": true,
+      "note": true,
+      "id": "cfa",
+      "sourcePage": 9,
+      "url": "https://www.cfasociety.org/indonesia/society-events/research-challenge"
+    },
+    {
+      "name": "Beasiswa Unggulan untuk D4 dan S1",
+      "description": true,
+      "timing": true,
+      "note": true,
+      "id": "unggulan",
+      "sourcePage": 10,
+      "url": "https://beasiswaunggulan.kemendikdasmen.go.id/"
+    },
+    {
+      "name": "Beasiswa Bakti BCA",
+      "description": true,
+      "timing": true,
+      "note": true,
+      "id": "bca",
+      "sourcePage": 10,
+      "url": "https://www.bca.co.id/id/tentang-bca/CSR/Bakti-BCA/bakti-pendidikan/beasiswa-bakti-bca"
+    },
+    {
+      "name": "SatuBeasiswa",
+      "description": true,
+      "timing": true,
+      "note": true,
+      "id": "satubeasiswa",
+      "sourcePage": 11,
+      "url": "https://satubeasiswa.kemdiktisaintek.go.id/"
+    },
+    {
+      "name": "Beasiswa pemerintah daerah",
+      "description": true,
+      "timing": true,
+      "note": true,
+      "id": "pemda",
+      "sourcePage": 11,
+      "url": "https://beasiswa.jambiprov.go.id/"
+    },
+    {
+      "name": "Layanan bantuan pendidikan kampus",
+      "description": true,
+      "timing": true,
+      "note": true,
+      "id": "kampus-bantuan",
+      "sourcePage": 11,
+      "url": null
+    },
+    {
+      "name": "Pertukaran semester melalui kampus",
+      "description": true,
+      "timing": true,
+      "note": true,
+      "id": "exchange",
+      "sourcePage": 12,
+      "url": "https://www.aunsec.org/discover-aun/thematic-networks/aun-acts"
+    },
+    {
+      "name": "AIESEC Global Volunteer",
+      "description": true,
+      "timing": true,
+      "note": true,
+      "id": "volunteer",
+      "sourcePage": 12,
+      "url": "https://aiesec.org/global-volunteer"
+    },
+    {
+      "name": "NUS Enterprise Summer Programme in Entrepreneurship",
+      "description": true,
+      "timing": true,
+      "note": true,
+      "id": "nus",
+      "sourcePage": 13,
+      "url": "https://enterprise.nus.edu.sg/education-programmes/summer-programme/"
+    },
+    {
+      "name": "HKU Summer Institute",
+      "description": true,
+      "timing": true,
+      "note": true,
+      "id": "hku",
+      "sourcePage": 13,
+      "url": "https://www.summerinstitute.hku.hk/faq"
+    },
+    {
+      "name": "Hansen Leadership Institute",
+      "description": true,
+      "timing": true,
+      "note": true,
+      "id": "hansen",
+      "sourcePage": 13,
+      "url": "https://hansenleadershipinstitute.org/faq/"
+    },
+    {
+      "name": "Forage",
+      "description": true,
+      "timing": true,
+      "note": true,
+      "id": "forage",
+      "sourcePage": 14,
+      "url": "https://www.theforage.com/"
+    },
+    {
+      "name": "Glints",
+      "description": true,
+      "timing": true,
+      "note": true,
+      "id": "glints",
+      "sourcePage": 14,
+      "url": "https://glints.com/id"
+    },
+    {
+      "name": "LinkedIn Jobs",
+      "description": true,
+      "timing": true,
+      "note": true,
+      "id": "linkedin",
+      "sourcePage": 14,
+      "url": "https://www.linkedin.com/jobs/"
+    },
+    {
+      "name": "Jobstreet",
+      "description": true,
+      "timing": true,
+      "note": true,
+      "id": "jobstreet",
+      "sourcePage": 15,
+      "url": "https://id.jobstreet.com/id/internship-jobs"
+    },
+    {
+      "name": "Prosple Indonesia",
+      "description": true,
+      "timing": true,
+      "note": true,
+      "id": "prosple",
+      "sourcePage": 15,
+      "url": "https://id.prosple.com/"
+    }
+  ],
+  "questions": [
+    {
+      "id": "waktu-luang",
+      "question": true,
+      "answers": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "id": "pengalaman",
+      "question": true,
+      "answers": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "id": "topik",
+      "question": true,
+      "answers": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "id": "langkah",
+      "question": true,
+      "answers": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    }
+  ],
+  "failures": []
+}
