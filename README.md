@@ -44,7 +44,7 @@ npm run build
 npm run start
 ```
 
-Halaman statis/prerendered dipakai untuk konten, dengan komponen client hanya untuk navigasi, tema, dan kuis. Font Montserrat dan Inter dihosting lokal melalui `next/font/local`; lisensinya disertakan di `src/assets/fonts/`. Ilustrasi SVG orisinal ada di `public/illustrations/`. Beranda mengikuti komposisi HTML preview yang diberikan pemilik: hero dengan foto, pita kategori, pengantar kuis, dan lima kategori bergantian kiri/kanan. Enam foto transparan di `public/images/home/` disesuaikan dengan palet Navy/Gold/Amber menggunakan imagegen, lalu dioptimalkan ke WebP. Asal aset dan prompt dicatat di `docs/HOME-IMAGE-ASSETS.md`.
+Halaman statis/prerendered dipakai untuk konten, dengan komponen client untuk navigasi, tema, kuis, animasi, dan asisten. Font Montserrat dan Inter dihosting lokal melalui `next/font/local`; lisensinya disertakan di `src/assets/fonts/`. Ilustrasi SVG orisinal ada di `public/illustrations/`. Beranda mengikuti komposisi HTML preview yang diberikan pemilik: hero dengan foto, pita kategori, pengantar kuis, dan lima kategori bergantian kiri/kanan. Enam foto transparan di `public/images/home/` disesuaikan dengan palet Navy/Gold/Amber menggunakan imagegen, lalu dioptimalkan ke WebP. Asal aset dan prompt dicatat di `docs/HOME-IMAGE-ASSETS.md`.
 
 ## Struktur konten
 
@@ -69,7 +69,7 @@ Pemeriksaan tersebut membandingkan nama, deskripsi, periode, persyaratan, serta 
 
 ## Aturan produk dan privasi
 
-Sumber prioritas: PRD → panduan isi → identitas visual → referensi desain yang sudah dikumpulkan → default komponen. Tidak ada scraping desain tambahan. Tidak ada akun, database, CMS, pencarian, filter, bookmark, detail peluang, modal peluang, hasil yang dibagikan, status deadline otomatis, AI rekomendasi, atau GA4.
+Sumber prioritas: PRD → panduan isi → identitas visual → referensi desain yang sudah dikumpulkan → default komponen. Tidak ada scraping desain tambahan. Tidak ada akun, database profil, CMS, pencarian, filter, bookmark, detail peluang, modal peluang, hasil yang dibagikan, status deadline otomatis, atau GA4. Asisten AI ditambahkan atas permintaan eksplisit pemilik pada 8 Oktober 2026; katalog dan scoring kuis tidak berubah.
 
 Kuis memakai `sessionStorage` (`kawan-kampus-quiz-v1`). Progres, jawaban, tahap tie-break, dan hasil bertahan selama sesi browser, termasuk refresh dan navigasi. Jika browser menolak storage, kuis tetap bekerja dalam memori tetapi refresh tidak dapat mempertahankan sesi. Pilihan tema manual tersimpan di `localStorage` (`kawan-kampus-theme`); kunjungan awal memakai tema terang, terlepas dari preferensi perangkat. Toggle terang/gelap beranimasi berada di footer. Menu navbar rata kanan. Mode System tidak tersedia; nilai lama system dimigrasikan ke light. Jawaban dan profil tidak dikirim ke server.
 
@@ -85,6 +85,27 @@ URL resmi berasal dari anotasi hyperlink pada PDF. Dua kanal kampus yang tidak m
 4. Aktifkan Vercel Web Analytics, lalu lakukan deployment dari dashboard atau CLI Anda.
 5. Periksa canonical, sitemap, Open Graph, tema, menu, kuis, dan tautan resmi pada domain final. Perubahan environment metadata memerlukan build baru.
 
-Tidak ada secret, database, atau backend tambahan yang dibutuhkan. `.env.example` mendokumentasikan konfigurasi domain. Rute `/kuis/hasil` tidak diindeks dan tidak dimasukkan ke sitemap karena hasil bersifat sesi.
+Halaman, katalog, dan kuis dapat berjalan tanpa secret. Asisten membutuhkan Groq API key dan pembatas bersama untuk Vercel, seperti dijelaskan di bawah. `.env.example` mendokumentasikan konfigurasi server dan domain. Rute `/kuis/hasil` tidak diindeks dan tidak dimasukkan ke sitemap karena hasil bersifat sesi.
+
+## Asisten kawankampus dan Groq
+
+Panel mengambang di kanan bawah tersedia pada semua halaman, dengan warna Navy/Gold/Linen dan dukungan Dark. Percakapan disimpan hanya dalam `sessionStorage` (`kawan-kampus-chat-v1`), maksimal 24 pesan tampilan. Server menerima paling banyak 12 pesan terbaru, 2.000 karakter per pesan dan 32 KB body. Enter mengirim, Shift+Enter membuat baris, Escape menutup panel dan mengembalikan fokus, Batalkan menghentikan permintaan, Mulai lagi membersihkan percakapan. Tanpa API yang aktif, panel menyediakan jalur katalog dan kuis, tanpa berpura-pura menghasilkan jawaban AI.
+
+Aktivasi lokal:
+
+1. Salin `.env.example` menjadi `.env.local` di root proyek.
+2. Isi `GROQ_API_KEY` dengan key milik Anda. Jangan gunakan awalan `NEXT_PUBLIC_` untuk key.
+3. Sesuaikan `GROQ_MODELS` dengan model yang diaktifkan pada akun Groq, urut model utama lalu cadangan, maksimal dua model. Default: `llama-3.3-70b-versatile,llama-3.1-8b-instant`.
+4. Restart server development. Buka panel dan kirim pertanyaan tentang katalog.
+
+Koneksi menggunakan Chat Completions Groq melalui `/api/chat`, sepenuhnya di server. Model cadangan dicoba ketika model utama mencapai kuota, tidak tersedia, respons tidak valid, atau gagal jaringan. Setiap percobaan memiliki timeout 9 detik, dengan deadline total 20 detik. Tidak ada API key atau respons mentah provider yang dikirim ke browser. Instruksi sistem dan katalog ditambahkan oleh server; client tidak dapat mengirim role system. Periksa model yang tersedia pada [dokumentasi Groq](https://console.groq.com/docs/models); koneksi mengikuti [Chat Completions](https://console.groq.com/docs/text-chat).
+
+Untuk Vercel, isi pula `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`, dan `CHAT_RATE_LIMIT_SECRET` (secret acak minimal 32 karakter). Asisten baru aktif pada Vercel jika konfigurasi pembatas bersama ini lengkap. Limiter memakai Redis EVAL atomik, 10 permintaan dalam jendela 60 detik per identitas IP dari header platform `x-vercel-forwarded-for`. Identitas di-HMAC sebelum menjadi key Redis; key kedaluwarsa setelah satu menit. Percakapan tidak disimpan dalam Redis. Jika Redis gagal, permintaan AI dihentikan sementara untuk menjaga batas konsisten. `429` menyertakan `Retry-After`. Pengunjung dalam jaringan bersama dapat berbagi kuota. Gunakan [REST API Upstash](https://upstash.com/docs/redis/features/restapi) untuk kredensial database dan [header Vercel](https://vercel.com/docs/headers/request-headers) sebagai acuan platform.
+
+Lokal menggunakan limiter memori. Self-hosted tanpa proxy tepercaya menggunakan satu bucket bersama. `CHAT_TRUSTED_IP_HEADER` hanya boleh diisi bila proxy Anda menimpa header tersebut dan server tidak dapat diakses melewati proxy; jangan mempercayai header IP dari client langsung. Untuk hosting beberapa instance selain Vercel, konfigurasi Redis tetap diperlukan agar batas bersama konsisten.
+
+Perilaku asisten berada di `src/lib/chat-context.ts`: Bahasa Indonesia hangat, jawaban ringkas, pertanyaan lanjutan tanpa data pribadi, fakta program hanya dari `src/data/categories.ts` dan `src/data/opportunities.ts`, tanggal sebagai acuan, dan sumber resmi sebagai rujukan akhir. Asisten tidak mengganti kuis atau menentukan kelayakan pendaftaran. Sumber jawaban berupa ID katalog yang divalidasi server; hanya URL dari katalog dapat menjadi tautan. Teks model ditampilkan sebagai teks biasa, tanpa HTML atau tautan buatan model. Aturan prompt mengurangi risiko jawaban keliru, tetapi bukan jaminan akurasi; sumber penyelenggara tetap acuan akhir.
+
+Pengguna diberi informasi bahwa pesan diproses layanan AI dan diminta tidak mengirim data pribadi. Server aplikasi tidak mencatat isi chat maupun secret; retensi pada layanan Groq mengikuti pengaturan dan ketentuan akun Anda. Kuota provider tetap berlaku; fitur tidak dijanjikan tanpa batas. Tes integrasi memakai respons Groq/Redis yang dimock dan tidak mengonsumsi kuota. Pengujian live memerlukan key dan kredensial milik pemilik proyek.
 
 Animasi beranda mengikuti preview pemilik: layar sambutan dengan tombol Mulai, gerakan hero/label/orbit, panah CTA yang tergambar, pita kategori berulang, dan reveal saat scroll. Pembuka tampil sekali per sesi tab (kawan-kampus-welcome-v1), dapat ditutup dengan Mulai atau Escape, lalu fokus berpindah ke heading beranda. Pita kategori berulang tanpa batas dan terus berjalan saat hover, tanpa tombol jeda. Foto hero ikut mengambang dan merespons gerakan kursor pada desktop; reveal kategori memakai transisi gambar dan teks yang lebih jelas. Reduced motion melewati pembuka dan menghapus animasi; perpindahan preferensi serta tab yang disembunyikan ditangani. Semua konten tetap terlihat jika JavaScript tidak berjalan.

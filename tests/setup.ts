@@ -3,15 +3,16 @@ import { afterEach, vi } from 'vitest';
 import { cleanup } from '@testing-library/react';
 afterEach(() => {
   cleanup();
-  window.sessionStorage.clear();
-  window.localStorage.clear();
+  if (typeof window !== 'undefined') {
+    window.sessionStorage.clear();
+    window.localStorage.clear();
+  }
   vi.clearAllMocks();
 });
-Object.defineProperty(window, 'matchMedia', {
-  writable: true,
-  value: vi
-    .fn()
-    .mockImplementation((query: string) => ({
+if (typeof window !== 'undefined')
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: vi.fn().mockImplementation((query: string) => ({
       matches: false,
       media: query,
       onchange: null,
@@ -21,4 +22,4 @@ Object.defineProperty(window, 'matchMedia', {
       removeEventListener: vi.fn(),
       dispatchEvent: vi.fn(),
     })),
-});
+  });

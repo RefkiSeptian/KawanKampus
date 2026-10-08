@@ -5,8 +5,8 @@
 | Pemeriksaan            | Hasil                                                                                                       |
 | ---------------------- | ----------------------------------------------------------------------------------------------------------- |
 | `npm run lint`         | Lulus; ESLint TypeScript, React Hooks, JSX accessibility + TypeScript strict; tanpa warning/error           |
-| `npm run test`         | 24 tes unit/komponen lulus, termasuk seluruh 625 kombinasi jawaban kuis                                     |
-| `npm run test:e2e`     | 22 tes lulus: desktop 1440 × 1000 dan mobile 390 × 844                                                      |
+| `npm run test`         | 34 tes unit/komponen lulus, termasuk seluruh 625 kombinasi jawaban kuis dan integrasi asisten              |
+| `npm run test:e2e`     | 26 tes lulus: desktop 1440 × 1000 dan mobile 390 × 844                                                      |
 | `npm run build`        | Lulus; 10 route wajib dan metadata routes terbangun; TypeScript lulus                                       |
 | `npm audit`            | 0 kerentanan pada semua dependency termasuk development                                                     |
 | Audit konten           | 25 peluang; 5 per kategori; 100 field sumber cocok; 4 pertanyaan dan 20 jawaban cocok; provenance URL cocok |
@@ -20,7 +20,7 @@ Diukur pada homepage production localhost, dengan Chrome headless. Skor adalah h
 
 | Mode    | Performance | Accessibility | Best Practices | SEO |
 | ------- | ----------: | ------------: | -------------: | --: |
-| Mobile  |          91 |           100 |            100 | 100 |
+| Mobile  |          83 |           100 |            100 | 100 |
 | Desktop |         100 |           100 |            100 | 100 |
 
 Laporan mentah HTML/JSON tersedia di `work/lighthouse/`. Screenshot visual dan hasil pengukuran overflow ada di `work/visual-qa/`. Laporan E2E ada di `playwright-report/`.
@@ -42,7 +42,7 @@ Laporan mentah HTML/JSON tersedia di `work/lighthouse/`. Screenshot visual dan h
 2. Aktifkan Vercel Web Analytics. Script hanya dimuat pada build Vercel agar tidak menyebabkan 404 di server lokal.
 3. Isi kontak/sosial jika informasi resmi sudah tersedia. Dua URL khusus kampus tetap `null`; jangan menggantinya dengan alamat yang ditebak.
 
-Tidak ada deployment, akun, database, fitur pencarian/filter, bookmark, CMS, modal peluang, detail peluang individual, AI rekomendasi, GA4, atau pembagian hasil kuis.
+Tidak ada deployment, akun, database profil, fitur pencarian/filter, bookmark, CMS, modal peluang, detail peluang individual, GA4, atau pembagian hasil kuis. Asisten AI ditambahkan pada 8 Oktober 2026 atas permintaan eksplisit pemilik; konfigurasi dan batas verifikasinya dijelaskan di bawah.
 
 ## Batas verifikasi
 
@@ -133,3 +133,19 @@ Lighthouse setelah revisi proposal: mobile 91/100/100/100 dan desktop 100/100/10
 Dua belas gambar dipasang pada kartu program yang sesuai dan dioptimalkan menjadi WebP lokal. Poster/banner dan logo ditampilkan utuh memakai scale-down; foto tetap memakai cover. Gambar Jambi 180 × 180 dan logo Forage 147 × 150 tidak diperbesar melewati resolusi aslinya. Pengantar Beasiswa menggunakan foto SatuBeasiswa; pengantar Internasional memakai foto NUS. Kredit sumber pihak ketiga dibedakan dari sumber resmi. Tautan CTA NUS memakai URL koreksi pemilik dan provenance koreksi diaudit terpisah.
 
 Lint/TypeScript, 24 tes unit/komponen, 22 E2E desktop/mobile, serta build produksi pada server E2E lulus. Audit isi PDF dan koreksi URL lulus. Halaman Beasiswa, Internasional, dan Dunia Kerja diperiksa pada 1440, 768, 390, dan 360 px dalam tema terang/gelap: semua gambar berhasil dimuat, tidak ada overflow atau error console. Screenshot dan laporan ada di work/provided-photos/ serta folder output chat. Lighthouse tidak diulang untuk perubahan ini.
+
+## Asisten AI mengambang, 8 Oktober 2026
+
+Panel sesuai lampiran ditambahkan ke seluruh halaman menggunakan K khas Gold dan palet brand. Desktop menampilkan panel 400 px dan label Tanya kawan; tablet/mobile memakai tombol K. Mode gelap, reduced motion, fokus input, Escape, Enter/Shift+Enter, reset, pembatalan, riwayat sesi, sumber aman, serta kondisi layanan tidak aktif tersedia. Tombol menghindari kontrol tema footer.
+
+Server /api/chat memakai Groq dengan konteks terpusat kategori/25 program, instruksi perilaku, JSON answer/source IDs, validasi sumber terhadap katalog, model cadangan, dan timeout. Secret tidak dikirim ke client. Role system dari client, pesan terlalu panjang, riwayat tidak valid, dan origin lain ditolak. Host publik diperhitungkan karena Next dapat menormalisasi URL internal ke localhost. Pembatas memori tersedia lokal; Redis atomik dengan identitas IP ber-HMAC diwajibkan untuk Vercel. Layanan AI berhenti sementara jika pembatas bersama gagal.
+
+34 unit/komponen dan 26 E2E lulus, termasuk fallback quota provider, batas 10/minute, reset waktu, hashing IP platform, fail-closed Redis, input API, sesi chat, reset, navigasi sumber, aksesibilitas panel, dan error quota UI. Lint/TypeScript serta build produksi lulus. Audit konten tetap 25 program/4 pertanyaan/20 jawaban tanpa kegagalan. Pemeriksaan 1440,768,390,360 px dalam Light/Dark: nol error JS, overflow, atau tumpang tindih launcher dengan tema footer. Request browser ke API tanpa konfigurasi menghasilkan 503 dengan pesan layanan tidak tersedia, bukan penolakan origin.
+
+Groq dan Redis diuji menggunakan mock; tidak ada key atau kredensial nyata yang diberikan sehingga kualitas generasi live, quota akun, dan integrasi database live belum diuji. Respons dalam screenshot percakapan adalah fixture. Pengaturan prompt mengurangi risiko jawaban keliru tetapi tidak menjamin semua fakta generasi AI; sumber resmi tetap acuan akhir. Tidak ada deployment atau pembuatan akun layanan eksternal.
+
+## Pemeriksaan kembali sebelum commit, 8 Oktober 2026
+
+Akses folder dan localhost telah pulih. Lint/TypeScript, 34 unit/komponen, seluruh 26 E2E, build produksi, dan audit sumber kembali lulus pada folder proyek utama. Panel chat dimuat ketika launcher dibuka agar tidak menambah seluruh logika percakapan pada pemuatan awal. Gambar hero disembunyikan saat cover masih menunggu hidrasi; foto pembuka tampil tanpa animasi pembesaran awal dan tetap mengambang.
+
+Lighthouse terbaru: mobile 83/100/100/100 dan desktop 100/100/100/100. Target script performa 90 belum tercapai pada mobile: LCP sekitar 4,5 detik pada foto blur kolase cover, tanpa layout shift. Pemeriksaan performa tidak diklaim lulus. Fungsionalitas, aksesibilitas otomatis, TypeScript, dan build lulus; koneksi live Groq/Redis tetap memerlukan kredensial pemilik. Tidak ada deployment yang dijalankan oleh agen.

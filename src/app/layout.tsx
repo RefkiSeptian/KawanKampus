@@ -4,6 +4,7 @@ import { Analytics } from '@vercel/analytics/next';
 import { Navigation } from '@/components/navigation';
 import { Footer } from '@/components/footer';
 import { ThemeProvider } from '@/components/theme-provider';
+import { ChatLauncher } from '@/components/chat-launcher';
 import { site } from '@/data/site';
 import { siteUrl } from '@/lib/metadata';
 import './globals.css';
@@ -48,6 +49,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Navigation />
           <main id="main-content">{children}</main>
           <Footer />
+          <ChatLauncher />
         </ThemeProvider>
         {process.env.VERCEL === '1' && <Analytics />}
       </body>

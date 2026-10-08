@@ -2939,6 +2939,9 @@ html[data-welcome-pending='true'] body::after {
   z-index: 99990;
   background: #16202e;
 }
+html[data-welcome-pending='true'] [data-home-hero-image] {
+  visibility: hidden;
+}
 html[data-welcome-pending='true'] [data-welcome-cover] {
   display: grid !important;
   position: fixed;
@@ -3083,6 +3086,14 @@ html[data-welcome-pending='true'] [data-welcome-cover] {
 .program-visual.logo .program-photo img {
   object-fit: scale-down;
   padding: clamp(24px, 4vw, 48px);
+}
+.footer-bottom .theme-control {
+  margin-right: 105px;
+}
+@media (max-width: 600px) {
+  .footer-bottom .theme-control {
+    margin-right: 65px;
+  }
 }
 .program-visual figcaption {
   font-size: 10px;
