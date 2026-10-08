@@ -6,7 +6,7 @@
 | ---------------------- | ----------------------------------------------------------------------------------------------------------- |
 | `npm run lint`         | Lulus; ESLint TypeScript, React Hooks, JSX accessibility + TypeScript strict; tanpa warning/error           |
 | `npm run test`         | 38 tes unit/komponen lulus, termasuk seluruh 625 kombinasi jawaban kuis dan integrasi asisten              |
-| `npm run test:e2e`     | 26 tes lulus: desktop 1440 × 1000 dan mobile 390 × 844                                                      |
+| `npm run test:e2e`     | 30 tes lulus: desktop 1440 × 1000 dan mobile 390 × 844                                                      |
 | `npm run build`        | Lulus; 10 route wajib dan metadata routes terbangun; TypeScript lulus                                       |
 | `npm audit`            | 0 kerentanan pada semua dependency termasuk development                                                     |
 | Audit konten           | 25 peluang; 5 per kategori; 100 field sumber cocok; 4 pertanyaan dan 20 jawaban cocok; provenance URL cocok |
@@ -165,3 +165,11 @@ Endpoint produksi yang tercantum pada metadata repo berhasil diperiksa: GET /api
 Default diperbarui menjadi openai/gpt-oss-20b dengan openai/gpt-oss-120b sebagai cadangan, mengikuti dokumentasi model Groq saat pemeriksaan. GPT-OSS menggunakan reasoning effort low, include_reasoning false, dan anggaran 2048 token agar reasoning tidak menghabiskan seluruh anggaran jawaban JSON. Konteks mengambil fakta program dari hingga dua kategori relevan; riwayat provider dibatasi enam pesan/6000 karakter. Sumber tetap dipetakan di server dari data asli. Model status 400/403 dapat mencoba cadangan; autentikasi 401 tidak dicoba ulang.
 
 Respons gagal memiliki kode diagnosis aman dan Retry-After untuk quota bila tersedia. Log hanya berisi kategori error, model dan status; tidak ada key, isi chat, prompt, atau respons mentah. 38 tes unit/komponen dan seluruh 26 E2E lulus, termasuk fallback model decommissioned 400, autentikasi aman 401, quota 429, konteks pertanyaan lanjutan dan pemetaan URL NUS. Build produksi pada server E2E lulus. Pemeriksaan live setelah pembaruan deployment dicatat terpisah; keberhasilan mock tidak dianggap keberhasilan provider live.
+
+## Panel chat yang dapat dipindahkan, 9 Oktober 2026
+
+Header menjadi kontrol drag untuk mouse dan sentuhan, dengan pointer capture dan pembaruan posisi melalui requestAnimationFrame. Panel memiliki mode ringkas, mode besar, pemulihan ukuran, dan tombol posisi awal. Posisi diingat dalam sessionStorage selama tab terbuka. Viewport dan perubahan ukuran panel diamati agar panel tetap berada dalam layar. Keyboard mendukung panah, Shift+panah, Home, dan Escape; feedback posisi tersedia bagi pembaca layar. Kontrol header tetap memakai logo K Gold dan permukaan warna brand.
+
+Lint/TypeScript, 38 tes unit/komponen, seluruh 30 E2E desktop/mobile, serta build produksi pada server E2E lulus. Empat eksekusi E2E baru memeriksa drag mouse/sentuhan asli melalui CDP Chromium, perpindahan keyboard, posisi setelah reload/resize ke 360 × 640, draft saat minimize/restore, mode besar, reset posisi, dan axe pada panel besar. Tidak ada perubahan provider, API key, konteks program, atau aturan kuis. Pemeriksaan visual dan demo gerakan menggunakan API fixture sehingga tidak memakai kuota Groq.
+
+Mode normal, ringkas, dan besar diperiksa pada 1440,768,390,360 px dalam tema terang/gelap: nol error JS, overflow atau pelanggaran axe pada panel. Screenshot tiap mode dan GIF drag disimpan pada folder output chat; laporan mentah ada di work/chat-window-visual.json. Server verifikasi sementara ditutup setelah pemeriksaan. Lighthouse tidak diulang karena panel tetap dimuat saat dibuka dan perubahan ini berfokus pada interaksi jendela.

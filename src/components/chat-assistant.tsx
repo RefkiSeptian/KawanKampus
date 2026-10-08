@@ -2,10 +2,23 @@
 
 import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from 'react';
 import Link from 'next/link';
-import { Asterisk, ArrowUpRight, Send, Square, X } from 'lucide-react';
+import {
+  Asterisk,
+  ArrowUpRight,
+  GripVertical,
+  Maximize2,
+  Minimize2,
+  Minus,
+  PanelTopOpen,
+  RotateCcw,
+  Send,
+  Square,
+  X,
+} from 'lucide-react';
 import { KMark } from './brand';
 import { assistant, MAX_HISTORY, MAX_MESSAGE_LENGTH, type DisplayMessage } from '@/data/assistant';
 import styles from './chat-assistant.module.css';
+import { useChatWindow } from './use-chat-window';
 
 function restoredMessages(): DisplayMessage[] {
   try {
@@ -46,11 +59,15 @@ export function ChatAssistant({ initialOpen = false }: { initialOpen?: boolean }
   const [error, setError] = useState('');
   const [available, setAvailable] = useState<boolean | null>(null);
   const [ready, setReady] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const [minimized, setMinimized] = useState(false);
   const launcher = useRef<HTMLButtonElement>(null);
   const input = useRef<HTMLTextAreaElement>(null);
   const thread = useRef<HTMLDivElement>(null);
   const panel = useRef<HTMLElement>(null);
   const controller = useRef<AbortController | null>(null);
+  const chatWindow = useChatWindow(panel, open, expanded, minimized);
+  const stopDragging = chatWindow.end;
 
   useEffect(() => {
     const saved = restoredMessages();
@@ -75,6 +92,7 @@ export function ChatAssistant({ initialOpen = false }: { initialOpen?: boolean }
     const escape = (event: globalThis.KeyboardEvent) => {
       if (event.key === 'Escape' && panel.current?.contains(event.target as Node)) {
         event.stopPropagation();
+        stopDragging();
         setOpen(false);
         launcher.current?.focus();
       }
@@ -94,16 +112,20 @@ export function ChatAssistant({ initialOpen = false }: { initialOpen?: boolean }
       abort.abort();
       document.removeEventListener('keydown', escape);
     };
-  }, [open]);
+  }, [open, stopDragging]);
   useEffect(() => {
     thread.current?.scrollTo({ top: thread.current.scrollHeight, behavior: 'instant' });
-  }, [messages, pending, open, error]);
+  }, [messages, pending, open, error, minimized]);
+  useEffect(() => {
+    if (open && !minimized && available !== false) input.current?.focus();
+  }, [open, minimized, available]);
   useEffect(() => {
     if (open && available === false)
-      panel.current?.querySelector<HTMLButtonElement>('button')?.focus();
+      panel.current?.querySelector<HTMLButtonElement>('button:not(:disabled)')?.focus();
   }, [open, available]);
 
   function close() {
+    chatWindow.end();
     setOpen(false);
     launcher.current?.focus();
   }
@@ -185,169 +207,253 @@ export function ChatAssistant({ initialOpen = false }: { initialOpen?: boolean }
           ref={panel}
           id="kawan-chat"
           className={styles.panel}
+          style={chatWindow.style}
+          data-expanded={expanded}
+          data-minimized={minimized}
+          data-dragging={chatWindow.dragging}
+          data-positioned={chatWindow.positioned}
+          data-small-viewport={chatWindow.smallViewport}
           role="dialog"
           aria-modal="false"
           aria-labelledby="kawan-chat-title"
         >
           <header className={styles.header}>
-            <span className={styles.mark}>
-              <KMark size={30} />
-            </span>
-            <div>
-              <h2 id="kawan-chat-title">{assistant.greeting}</h2>
-              <p>{assistant.subtitle}</p>
-            </div>
+            <h2 id="kawan-chat-title" className="sr-only">
+              {assistant.greeting}
+            </h2>
             <button
               type="button"
-              className={styles.close}
-              onClick={close}
-              aria-label="Tutup asisten"
+              className={styles.dragHandle}
+              aria-label="Pindahkan panel asisten"
+              aria-describedby="kawan-chat-move-help"
+              disabled={expanded}
+              title={
+                expanded
+                  ? 'Kembalikan ukuran untuk memindahkan panel'
+                  : 'Geser panel atau gunakan tombol panah'
+              }
+              {...chatWindow.handle}
             >
-              <X size={19} />
+              <span className={styles.mark}>
+                <KMark size={28} />
+              </span>
+              <span className={styles.headerCopy}>
+                <span className={styles.greeting}>
+                  {minimized ? 'kawankampus.' : assistant.greeting}
+                </span>
+                <span className={styles.subtitle}>
+                  {minimized
+                    ? pending
+                      ? 'Sedang menyusun jawaban…'
+                      : 'Lanjutkan percakapanmu.'
+                    : assistant.subtitle}
+                </span>
+              </span>
+              <GripVertical size={14} className={styles.dragGrip} aria-hidden="true" />
             </button>
-          </header>
-          <p className={styles.notice}>
-            Asisten AI untuk menjelajahi peluang. Jangan kirim data pribadi; pesan diproses layanan
-            AI. Cek kembali informasi di sumber resmi.
-          </p>
-          <div ref={thread} className={styles.thread}>
-            {messages.length === 0 && !pending && (
-              <div className={styles.empty}>
-                <Asterisk size={45} aria-hidden="true" />
-                <h3>Lagi penasaran apa?</h3>
-                <p>Kita bisa kenali kegiatan, bandingkan pilihan, atau cari satu langkah kecil.</p>
-                <div className={styles.starters}>
-                  {assistant.starters.map((starter) => (
-                    <button
-                      key={starter.label}
-                      type="button"
-                      disabled={available !== true}
-                      onClick={() => void send(starter.message)}
-                    >
-                      {starter.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-            <div
-              className={styles.messages}
-              role="log"
-              aria-label="Percakapan dengan kawankampus"
-              aria-live="polite"
-              aria-relevant="additions text"
-            >
-              {messages.map((message, index) => (
-                <article
-                  key={index}
-                  className={`${styles.message} ${message.role === 'user' ? styles.user : styles.answer}`}
-                >
-                  <span className={styles.speaker}>
-                    {message.role === 'user' ? 'Kamu' : 'kawankampus'}
-                  </span>
-                  <p>{message.content}</p>
-                  {message.sources && message.sources.length > 0 && (
-                    <div className={styles.sources}>
-                      <span>Kenali lebih lanjut</span>
-                      {message.sources.map((source) =>
-                        source.url.startsWith('/') ? (
-                          <Link key={source.id} href={source.url} onClick={close}>
-                            {source.label}
-                            <ArrowUpRight size={13} aria-hidden="true" />
-                          </Link>
-                        ) : (
-                          <a
-                            key={source.id}
-                            href={source.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            {source.label}
-                            <ArrowUpRight size={13} aria-hidden="true" />
-                            <span className="sr-only"> (tab baru)</span>
-                          </a>
-                        ),
-                      )}
-                    </div>
-                  )}
-                </article>
-              ))}
-              {pending && (
-                <article className={`${styles.message} ${styles.user}`}>
-                  <span className={styles.speaker}>Kamu</span>
-                  <p>{pending}</p>
-                </article>
-              )}
-            </div>
-            {pending && (
-              <p className={styles.status} role="status">
-                <span className={styles.dots} aria-hidden="true">
-                  <i />
-                  <i />
-                  <i />
-                </span>{' '}
-                Sedang menyusun jawaban…
-              </p>
-            )}
-            {available === false && (
-              <div className={styles.unavailable} role="status">
-                <strong>Asisten AI belum tersedia.</strong>
-                <p>Kamu tetap bisa menemukan pilihan lewat katalog dan kuis.</p>
-                <Link href="/jelajahi-peluang" onClick={close}>
-                  Jelajahi Peluang <ArrowUpRight size={14} />
-                </Link>
-                <Link href="/kuis" onClick={close}>
-                  Temukan Minatku <ArrowUpRight size={14} />
-                </Link>
-              </div>
-            )}
-            {error && (
-              <p className={styles.error} role="alert">
-                {error}
-              </p>
-            )}
-          </div>
-          <div className={styles.bottom}>
-            <form className={styles.composer} onSubmit={submit}>
-              <label className="sr-only" htmlFor="kawan-chat-input">
-                Pesan untuk kawankampus
-              </label>
-              <textarea
-                ref={input}
-                id="kawan-chat-input"
-                rows={2}
-                maxLength={MAX_MESSAGE_LENGTH}
-                placeholder="Tulis rasa penasaranmu…"
-                value={draft}
-                onChange={(e) => setDraft(e.target.value)}
-                onKeyDown={keyDown}
-                disabled={Boolean(pending) || available === false}
-              />
-              {pending ? (
-                <button
-                  type="button"
-                  onClick={() => controller.current?.abort()}
-                  aria-label="Batalkan jawaban"
-                >
-                  <Square size={16} />
-                </button>
-              ) : (
-                <button
-                  type="submit"
-                  disabled={!draft.trim() || available !== true}
-                  aria-label="Kirim pesan"
-                >
-                  <Send size={18} />
-                </button>
-              )}
-            </form>
-            <div className={styles.session}>
-              <span>Percakapan tersimpan selama sesi.</span>
-              <button type="button" onClick={reset}>
-                Mulai lagi
+            <p id="kawan-chat-move-help" className="sr-only">
+              Seret header untuk memindahkan panel. Dengan keyboard, gunakan tombol panah, Shift
+              untuk langkah lebih besar, dan Home untuk kembali ke posisi awal.
+            </p>
+            <div className={styles.windowActions}>
+              <button
+                type="button"
+                className={styles.windowButton}
+                aria-label={minimized ? 'Pulihkan percakapan' : 'Minimalkan asisten'}
+                title={minimized ? 'Pulihkan percakapan' : 'Minimalkan'}
+                onClick={() => {
+                  chatWindow.end();
+                  if (!minimized) setExpanded(false);
+                  setMinimized(!minimized);
+                }}
+              >
+                {minimized ? <PanelTopOpen size={16} /> : <Minus size={16} />}
+              </button>
+              <button
+                type="button"
+                className={styles.windowButton}
+                aria-label={expanded ? 'Kembalikan ukuran panel' : 'Perbesar panel asisten'}
+                title={expanded ? 'Kembalikan ukuran' : 'Perbesar'}
+                onClick={() => {
+                  chatWindow.end();
+                  setMinimized(false);
+                  setExpanded(!expanded);
+                }}
+              >
+                {expanded ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
+              </button>
+              <button
+                type="button"
+                className={styles.close}
+                onClick={close}
+                aria-label="Tutup asisten"
+              >
+                <X size={19} />
               </button>
             </div>
-          </div>
+          </header>
+          {!minimized && (
+            <>
+              <p className={styles.notice}>
+                Asisten AI untuk menjelajahi peluang. Jangan kirim data pribadi; pesan diproses
+                layanan AI. Cek kembali informasi di sumber resmi.
+              </p>
+              <div ref={thread} className={styles.thread}>
+                {messages.length === 0 && !pending && (
+                  <div className={styles.empty}>
+                    <Asterisk size={45} aria-hidden="true" />
+                    <h3>Lagi penasaran apa?</h3>
+                    <p>
+                      Kita bisa kenali kegiatan, bandingkan pilihan, atau cari satu langkah kecil.
+                    </p>
+                    <div className={styles.starters}>
+                      {assistant.starters.map((starter) => (
+                        <button
+                          key={starter.label}
+                          type="button"
+                          disabled={available !== true}
+                          onClick={() => void send(starter.message)}
+                        >
+                          {starter.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                <div
+                  className={styles.messages}
+                  role="log"
+                  aria-label="Percakapan dengan kawankampus"
+                  aria-live="polite"
+                  aria-relevant="additions text"
+                >
+                  {messages.map((message, index) => (
+                    <article
+                      key={index}
+                      className={`${styles.message} ${message.role === 'user' ? styles.user : styles.answer}`}
+                    >
+                      <span className={styles.speaker}>
+                        {message.role === 'user' ? 'Kamu' : 'kawankampus'}
+                      </span>
+                      <p>{message.content}</p>
+                      {message.sources && message.sources.length > 0 && (
+                        <div className={styles.sources}>
+                          <span>Kenali lebih lanjut</span>
+                          {message.sources.map((source) =>
+                            source.url.startsWith('/') ? (
+                              <Link key={source.id} href={source.url} onClick={close}>
+                                {source.label}
+                                <ArrowUpRight size={13} aria-hidden="true" />
+                              </Link>
+                            ) : (
+                              <a
+                                key={source.id}
+                                href={source.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                {source.label}
+                                <ArrowUpRight size={13} aria-hidden="true" />
+                                <span className="sr-only"> (tab baru)</span>
+                              </a>
+                            ),
+                          )}
+                        </div>
+                      )}
+                    </article>
+                  ))}
+                  {pending && (
+                    <article className={`${styles.message} ${styles.user}`}>
+                      <span className={styles.speaker}>Kamu</span>
+                      <p>{pending}</p>
+                    </article>
+                  )}
+                </div>
+                {pending && (
+                  <p className={styles.status} role="status">
+                    <span className={styles.dots} aria-hidden="true">
+                      <i />
+                      <i />
+                      <i />
+                    </span>{' '}
+                    Sedang menyusun jawaban…
+                  </p>
+                )}
+                {available === false && (
+                  <div className={styles.unavailable} role="status">
+                    <strong>Asisten AI belum tersedia.</strong>
+                    <p>Kamu tetap bisa menemukan pilihan lewat katalog dan kuis.</p>
+                    <Link href="/jelajahi-peluang" onClick={close}>
+                      Jelajahi Peluang <ArrowUpRight size={14} />
+                    </Link>
+                    <Link href="/kuis" onClick={close}>
+                      Temukan Minatku <ArrowUpRight size={14} />
+                    </Link>
+                  </div>
+                )}
+                {error && (
+                  <p className={styles.error} role="alert">
+                    {error}
+                  </p>
+                )}
+              </div>
+              <div className={styles.bottom}>
+                <form className={styles.composer} onSubmit={submit}>
+                  <label className="sr-only" htmlFor="kawan-chat-input">
+                    Pesan untuk kawankampus
+                  </label>
+                  <textarea
+                    ref={input}
+                    id="kawan-chat-input"
+                    rows={2}
+                    maxLength={MAX_MESSAGE_LENGTH}
+                    placeholder="Tulis rasa penasaranmu…"
+                    value={draft}
+                    onChange={(e) => setDraft(e.target.value)}
+                    onKeyDown={keyDown}
+                    disabled={Boolean(pending) || available === false}
+                  />
+                  {pending ? (
+                    <button
+                      type="button"
+                      onClick={() => controller.current?.abort()}
+                      aria-label="Batalkan jawaban"
+                    >
+                      <Square size={16} />
+                    </button>
+                  ) : (
+                    <button
+                      type="submit"
+                      disabled={!draft.trim() || available !== true}
+                      aria-label="Kirim pesan"
+                    >
+                      <Send size={18} />
+                    </button>
+                  )}
+                </form>
+                <div className={styles.session}>
+                  <span>Percakapan tersimpan selama sesi.</span>
+                  <button type="button" onClick={reset}>
+                    Mulai lagi
+                  </button>
+                </div>
+                <button
+                  type="button"
+                  className={styles.dock}
+                  onClick={() => {
+                    setExpanded(false);
+                    chatWindow.dock();
+                  }}
+                  title="Kembali ke kanan bawah"
+                >
+                  <RotateCcw size={12} aria-hidden="true" /> Posisi awal
+                </button>
+              </div>
+            </>
+          )}
+          <span className="sr-only" role="status">
+            {chatWindow.announcement}
+          </span>
         </section>
       )}
       <button
@@ -357,7 +463,13 @@ export function ChatAssistant({ initialOpen = false }: { initialOpen?: boolean }
         aria-label={open ? 'Tutup asisten kawankampus' : 'Buka asisten kawankampus'}
         aria-expanded={open}
         aria-controls={open ? 'kawan-chat' : undefined}
-        onClick={() => (open ? close() : setOpen(true))}
+        onClick={() => {
+          if (open) close();
+          else {
+            setMinimized(false);
+            setOpen(true);
+          }
+        }}
       >
         {open ? <X size={25} aria-hidden="true" /> : <KMark size={29} />}
         {!open && <span className={styles.launcherLabel}>Tanya kawan</span>}

@@ -91,6 +91,8 @@ Halaman, katalog, dan kuis dapat berjalan tanpa secret. Asisten hanya membutuhka
 
 Panel mengambang di kanan bawah tersedia pada semua halaman, dengan warna Navy/Gold/Linen dan dukungan Dark. Percakapan disimpan hanya dalam `sessionStorage` (`kawan-kampus-chat-v1`), maksimal 24 pesan tampilan. Server menerima paling banyak 12 pesan terbaru, 2.000 karakter per pesan dan 32 KB body. Enter mengirim, Shift+Enter membuat baris, Escape menutup panel dan mengembalikan fokus, Batalkan menghentikan permintaan, Mulai lagi membersihkan percakapan. Tanpa API yang aktif, panel menyediakan jalur katalog dan kuis, tanpa berpura-pura menghasilkan jawaban AI.
 
+Panel dapat dipindahkan dengan menyeret bagian header, memakai mouse atau sentuhan. Kontrol header menyediakan Minimalkan, Pulihkan, Perbesar, dan Kembalikan ukuran. Draft serta percakapan bertahan saat diminimalkan. Tombol Posisi awal mengembalikan panel ke kanan bawah. Posisi tersimpan selama sesi tab pada `kawan-kampus-chat-position-v1`, lalu disesuaikan jika viewport berubah. Fokus pada kontrol Pindahkan panel asisten: tombol panah menggeser 16 px, Shift+panah 40 px, Home mengembalikan posisi, Escape membatalkan drag aktif atau menutup panel. Mode besar memakai ruang baca lebih luas dan tidak dapat digeser sampai ukuran normal dipulihkan. VisualViewport/ResizeObserver menjaga panel di layar; reduced motion meniadakan animasi perpindahan.
+
 Aktivasi lokal:
 
 1. Salin `.env.example` menjadi `.env.local` di root proyek.
