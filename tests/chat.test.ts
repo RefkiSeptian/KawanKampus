@@ -18,9 +18,6 @@ function request(
 beforeEach(() => {
   vi.stubEnv('GROQ_API_KEY', 'test-key-not-real');
   vi.stubEnv('VERCEL', '');
-  vi.stubEnv('UPSTASH_REDIS_REST_URL', '');
-  vi.stubEnv('UPSTASH_REDIS_REST_TOKEN', '');
-  vi.stubEnv('CHAT_RATE_LIMIT_SECRET', '');
   vi.stubEnv('CHAT_TRUSTED_IP_HEADER', '');
 });
 afterEach(() => {
@@ -117,7 +114,6 @@ describe('chat API', () => {
     ).toBe(400);
   });
   it('returns a bounded grounded response, not provider secrets', async () => {
-    vi.stubEnv('CHAT_RATE_LIMIT_SECRET', 'api-success-test');
     vi.stubGlobal(
       'fetch',
       vi.fn().mockResolvedValue(
@@ -143,41 +139,60 @@ describe('chat API', () => {
       sources: [{ id: 'explore', label: 'Jelajahi Peluang', url: '/jelajahi-peluang' }],
     });
   });
-  it('requires shared limits on Vercel and fails closed if Redis fails', async () => {
+  it('activates on Vercel with only a Groq key and calls no other service', async () => {
     vi.stubEnv('VERCEL', '1');
-    expect((await POST(request())).status).toBe(503);
-    vi.stubEnv('UPSTASH_REDIS_REST_URL', 'https://test.upstash.io');
-    vi.stubEnv('UPSTASH_REDIS_REST_TOKEN', 'test');
-    vi.stubEnv('CHAT_RATE_LIMIT_SECRET', 'secret');
-    const fetch = vi.fn().mockResolvedValue(new Response('', { status: 500 }));
+    const fetch = vi
+      .fn()
+      .mockResolvedValue(
+        Response.json({
+          choices: [
+            {
+              message: {
+                content: JSON.stringify({ answer: 'Mulai dari katalog.', sources: ['explore'] }),
+              },
+            },
+          ],
+        }),
+      );
     vi.stubGlobal('fetch', fetch);
-    expect((await POST(request())).status).toBe(503);
+    expect((await GET().json()).available).toBe(true);
+    expect((await POST(request())).status).toBe(200);
     expect(fetch).toHaveBeenCalledTimes(1);
+    expect(fetch.mock.calls[0][0]).toBe('https://api.groq.com/openai/v1/chat/completions');
   });
 });
 
 describe('10 requests/minute limit', () => {
   it('blocks request eleven and resets after a minute', async () => {
-    vi.stubEnv('CHAT_RATE_LIMIT_SECRET', 'local-window-test');
-    for (let i = 0; i < 10; i++) expect((await limitChat(new Headers(), 1000)).allowed).toBe(true);
-    expect(await limitChat(new Headers(), 1000)).toEqual({ allowed: false, retryAfter: 60 });
-    expect((await limitChat(new Headers(), 61_000)).allowed).toBe(true);
-  });
-  it('uses one atomic Redis command, hashes the trusted IP, and checks shared limits', async () => {
     vi.stubEnv('VERCEL', '1');
-    vi.stubEnv('UPSTASH_REDIS_REST_URL', 'https://test.upstash.io');
-    vi.stubEnv('UPSTASH_REDIS_REST_TOKEN', 'test');
-    vi.stubEnv('CHAT_RATE_LIMIT_SECRET', 'hashing-test');
-    const fetch = vi.fn().mockResolvedValue(Response.json({ result: [11, 25000] }));
+    const headers = new Headers({ 'x-vercel-forwarded-for': '203.0.113.20' });
+    for (let i = 0; i < 10; i++) expect((await limitChat(headers, 1000)).allowed).toBe(true);
+    expect(await limitChat(headers, 1000)).toEqual({ allowed: false, retryAfter: 60 });
+    expect((await limitChat(headers, 61_000)).allowed).toBe(true);
+  });
+  it('keeps IP counters separate and ignores spoofed forwarding headers on Vercel', async () => {
+    vi.stubEnv('VERCEL', '1');
+    const fetch = vi.fn();
     vi.stubGlobal('fetch', fetch);
+    const visitor = new Headers({
+      'x-vercel-forwarded-for': '203.0.113.30',
+      'x-forwarded-for': '203.0.113.31',
+    });
+    for (let i = 0; i < 10; i++) await limitChat(visitor, 1000);
     expect(
-      await limitChat(
-        new Headers({ 'x-vercel-forwarded-for': '203.0.113.1', 'x-forwarded-for': 'spoofed' }),
-      ),
-    ).toEqual({ allowed: false, retryAfter: 25 });
-    const command = JSON.parse(fetch.mock.calls[0][1].body);
-    expect(command[0]).toBe('EVAL');
-    expect(command[3]).toMatch(/^kk:chat:[a-f0-9]{64}$/);
-    expect(command.join('')).not.toContain('203.0.113.1');
+      (
+        await limitChat(
+          new Headers({
+            'x-vercel-forwarded-for': '203.0.113.30',
+            'x-forwarded-for': '203.0.113.99',
+          }),
+          1000,
+        )
+      ).allowed,
+    ).toBe(false);
+    expect(
+      (await limitChat(new Headers({ 'x-vercel-forwarded-for': '203.0.113.31' }), 1000)).allowed,
+    ).toBe(true);
+    expect(fetch).not.toHaveBeenCalled();
   });
 });
