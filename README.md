@@ -95,10 +95,14 @@ Aktivasi lokal:
 
 1. Salin `.env.example` menjadi `.env.local` di root proyek.
 2. Isi `GROQ_API_KEY` dengan key milik Anda. Jangan gunakan awalan `NEXT_PUBLIC_` untuk key.
-3. Sesuaikan `GROQ_MODELS` dengan model yang diaktifkan pada akun Groq, urut model utama lalu cadangan, maksimal dua model. Default: `llama-3.3-70b-versatile,llama-3.1-8b-instant`.
+3. Sesuaikan `GROQ_MODELS` dengan model yang diaktifkan pada akun Groq, urut model utama lalu cadangan, maksimal dua model. Default: `openai/gpt-oss-20b,openai/gpt-oss-120b`. Tanpa variabel ini, default tersebut dipakai otomatis.
 4. Restart server development. Buka panel dan kirim pertanyaan tentang katalog.
 
 Koneksi menggunakan Chat Completions Groq melalui `/api/chat`, sepenuhnya di server. Model cadangan dicoba ketika model utama mencapai kuota, tidak tersedia, respons tidak valid, atau gagal jaringan. Setiap percobaan memiliki timeout 9 detik, dengan deadline total 20 detik. Tidak ada API key atau respons mentah provider yang dikirim ke browser. Instruksi sistem dan katalog ditambahkan oleh server; client tidak dapat mengirim role system. Periksa model yang tersedia pada [dokumentasi Groq](https://console.groq.com/docs/models); koneksi mengikuti [Chat Completions](https://console.groq.com/docs/text-chat).
+
+Konteks mengambil hingga dua kategori yang sesuai pertanyaan terbaru atau topik sebelumnya, beserta fakta program dari data asli. Pertanyaan awal umum mendapat ringkasan lima kategori dan jalur kuis. URL sumber tetap dipetakan oleh server, sementara model menerima ID dan label. Riwayat yang diteruskan ke provider dibatasi enam pesan terbaru/6.000 karakter agar tidak mengirim seluruh katalog dan riwayat panjang pada setiap panggilan. GPT-OSS memakai reasoning effort low, include_reasoning false, dan max_completion_tokens 2048 agar anggaran token juga cukup untuk jawaban JSON. Model lain memakai JSON mode dengan anggaran 700 token.
+
+Untuk diagnosis, response gagal memuat kode aman: GROQ_AUTH (key tidak valid), GROQ_MODEL (model/izin model), GROQ_RATE_LIMIT (kuota), GROQ_REQUEST (parameter permintaan), GROQ_RESPONSE (jawaban tidak valid), GROQ_TIMEOUT, atau GROQ_UNAVAILABLE. Log server hanya memuat tag `[kawan-chat]`, kategori error, model, dan status HTTP. Tidak ada key, prompt, percakapan, atau respons error mentah. Kegagalan model status 400/403 juga mencoba model cadangan; key yang gagal autentikasi 401 tidak dicoba ulang. Kuota provider menghasilkan 429 dan Retry-After jika tersedia.
 
 Untuk Vercel, isi `GROQ_API_KEY` pada environment Production lalu lakukan redeploy. Model utama/cadangan sudah memiliki default; `GROQ_MODELS` hanya perlu diubah bila akun memakai model lain. Upstash/Redis dan secret pembatas tidak diperlukan. Variabel Upstash dari versi lama tidak lagi dibaca oleh aplikasi.
 

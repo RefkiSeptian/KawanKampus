@@ -98,7 +98,18 @@ export async function POST(request: Request) {
         { 'Retry-After': String(limit.retryAfter) },
       );
     const result = await completeChat(messages, request.signal);
-    if (result) return reply(result);
+    if (result.ok) return reply({ answer: result.answer, sources: result.sources });
+    const error =
+      result.code === 'GROQ_RATE_LIMIT'
+        ? 'Kuota layanan AI sementara tercapai. Coba lagi nanti; katalog dan kuis tetap bisa kamu gunakan.'
+        : result.code === 'GROQ_TIMEOUT'
+          ? 'Jawaban memerlukan waktu lebih lama. Coba lagi nanti.'
+          : 'Asisten sedang tidak tersedia. Coba lagi nanti; katalog dan kuis tetap bisa kamu gunakan.';
+    return reply(
+      { error, code: result.code, ...(result.retryAfter ? { retryAfter: result.retryAfter } : {}) },
+      result.code === 'GROQ_RATE_LIMIT' ? 429 : 503,
+      result.retryAfter ? { 'Retry-After': String(result.retryAfter) } : {},
+    );
   } catch {
     /* Do not log conversation text, credentials, or provider responses. */
   }

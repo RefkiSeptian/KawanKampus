@@ -5,7 +5,7 @@
 | Pemeriksaan            | Hasil                                                                                                       |
 | ---------------------- | ----------------------------------------------------------------------------------------------------------- |
 | `npm run lint`         | Lulus; ESLint TypeScript, React Hooks, JSX accessibility + TypeScript strict; tanpa warning/error           |
-| `npm run test`         | 34 tes unit/komponen lulus, termasuk seluruh 625 kombinasi jawaban kuis dan integrasi asisten              |
+| `npm run test`         | 38 tes unit/komponen lulus, termasuk seluruh 625 kombinasi jawaban kuis dan integrasi asisten              |
 | `npm run test:e2e`     | 26 tes lulus: desktop 1440 × 1000 dan mobile 390 × 844                                                      |
 | `npm run build`        | Lulus; 10 route wajib dan metadata routes terbangun; TypeScript lulus                                       |
 | `npm audit`            | 0 kerentanan pada semua dependency termasuk development                                                     |
@@ -157,3 +157,11 @@ Atas permintaan pemilik untuk mengurangi konfigurasi, syarat Upstash/Redis dan C
 Pembatas dasar 10 permintaan dalam 60 detik memakai counter memori per IP per instance, dengan maksimum 10.000 bucket aktif. IP valid berasal dari header platform Vercel dan di-hash untuk key memori. Counter terhapus ketika instance restart dan tidak dibagi antar-instance; pembatas ini tidak menjamin batas global yang konsisten. Kuota Groq tetap berlaku pada akun/organisasi. Model cadangan, konteks katalog, validasi sumber, origin, batas pesan, timeout, sesi browser, dan fallback UI tetap digunakan. Catatan Redis pada bagian sebelumnya merupakan riwayat revisi, bukan konfigurasi saat ini.
 
 Lint/TypeScript, 34 unit/komponen, serta seluruh 26 E2E desktop/mobile lulus setelah perubahan ini. Build produksi pada server E2E lulus. Tes integrasi secara khusus memastikan GET mengaktifkan asisten pada Vercel dengan satu Groq key, POST memanggil hanya endpoint Groq, request ke-11 ditolak pada counter instance, counter berbeda menurut IP platform, dan header forwarding umum tidak dapat mengganti IP Vercel. Tes provider memakai mock; tidak ada request ke Groq live yang dilakukan.
+
+## Perbaikan kegagalan panggilan Groq, 8 Oktober 2026
+
+Endpoint produksi yang tercantum pada metadata repo berhasil diperiksa: GET /api/chat mengembalikan available true, sedangkan POST chat mengembalikan 503 generik. Key telah terpasang, tetapi respons lama tidak membedakan autentikasi, model, quota, timeout, atau format jawaban; sebab provider yang tepat belum bisa ditentukan dari respons itu.
+
+Default diperbarui menjadi openai/gpt-oss-20b dengan openai/gpt-oss-120b sebagai cadangan, mengikuti dokumentasi model Groq saat pemeriksaan. GPT-OSS menggunakan reasoning effort low, include_reasoning false, dan anggaran 2048 token agar reasoning tidak menghabiskan seluruh anggaran jawaban JSON. Konteks mengambil fakta program dari hingga dua kategori relevan; riwayat provider dibatasi enam pesan/6000 karakter. Sumber tetap dipetakan di server dari data asli. Model status 400/403 dapat mencoba cadangan; autentikasi 401 tidak dicoba ulang.
+
+Respons gagal memiliki kode diagnosis aman dan Retry-After untuk quota bila tersedia. Log hanya berisi kategori error, model dan status; tidak ada key, isi chat, prompt, atau respons mentah. 38 tes unit/komponen dan seluruh 26 E2E lulus, termasuk fallback model decommissioned 400, autentikasi aman 401, quota 429, konteks pertanyaan lanjutan dan pemetaan URL NUS. Build produksi pada server E2E lulus. Pemeriksaan live setelah pembaruan deployment dicatat terpisah; keberhasilan mock tidak dianggap keberhasilan provider live.
