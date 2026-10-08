@@ -6,7 +6,7 @@ Tanggal: 7 Oktober 2026. Prioritas yang diterapkan: PRD v1.0 → Panduan Isi Web
 
 Teks lengkap dan hyperlink `/Annots /A /URI` diekstrak dari PDF. Panduan visual juga dirender dan keempat halamannya diperiksa. Nilai CSS, screenshot, dan catatan referensi yang sudah tersimpan digunakan untuk komposisi dan pola interaksi. Konten implementasi kemudian dibandingkan kembali terhadap teks PDF yang sama.
 
-`scripts/audit-content.mjs` memeriksa setiap nama, deskripsi, periode, dan catatan persyaratan dengan normalisasi spasi/tanda baca. Semua 100 field peluang cocok dengan sumber, seluruh 4 pertanyaan dan 20 jawaban cocok, dan setiap URL peluang cocok dengan hyperlink pada halaman sumbernya. Hasil rinci ada di `content-audit.json`, dengan provenance URL terpisah dalam `source-hyperlinks.json`.
+`scripts/audit-content.mjs` memeriksa setiap nama, deskripsi, periode, dan catatan persyaratan dengan normalisasi spasi/tanda baca. Semua 100 field peluang cocok dengan sumber, seluruh 4 pertanyaan dan 20 jawaban cocok. URL mengikuti hyperlink pada halaman sumber atau koreksi eksplisit pemilik yang terdokumentasi dalam `link-corrections.json`; audit mencocokkan URL lama dengan PDF dan URL baru dengan koreksi. Hasil rinci ada di `content-audit.json`, dengan provenance PDF terpisah dalam `source-hyperlinks.json`.
 
 ## Cakupan peluang
 
@@ -97,3 +97,9 @@ Arahan pemilik selanjutnya meminta animasi preview diterapkan. Pembuka visual ki
 Arahan pemilik terbaru memindahkan kontrol tema ke footer dan menetapkan Light sebagai default, sehingga mode System dari PRD tidak dipakai. Tagline guideline dihapus dari UI, dan ikon K terpisah diganti huruf k Gold pada wordmark. Ini adalah perubahan eksplisit dari pemilik; fakta program, syarat, periode, URL, dan aturan kuis tidak berubah.
 
 Sumber visual tambahan berasal dari situs resmi program, penyelenggara, atau publikasi resmi kampus, sesuai permintaan pemilik. Semua URL unduhan, halaman sumber, kredit, dan alt text tersimpan di docs/PHOTO-SOURCES.json. Visual yang tidak memiliki materi terverifikasi memakai ilustrasi Kawan Kampus dan tidak diklaim sebagai foto kegiatan program. Judul pengantar kategori mengikuti proposal terbaru; nama program, deskripsi, periode, syarat, URL pendaftaran, pertanyaan, jawaban, skor, dan tie-break tetap dari panduan isi/PRD.
+
+## Tambahan aset dan koreksi tautan, 8 Oktober 2026
+
+Pemilik memberikan 12 URL visual untuk Beasiswa Unggulan, SatuBeasiswa, beasiswa Pemda, AUN, AIESEC Global Volunteer, NUS, HKU, Forage, Glints, LinkedIn, Jobstreet, dan Prosple. Semuanya disimpan sebagai WebP lokal. Kredit membedakan sumber resmi dari gambar pihak ketiga yang disediakan pemilik; manifest lengkap ada dalam `PHOTO-SOURCES.json`. Poster Unggulan dan Jambi merupakan pengumuman hasil/penerima, bukan informasi bahwa pendaftaran sedang dibuka. Gambar tidak mengubah periode, syarat, atau makna naskah panduan.
+
+URL NUS pada kartu diubah atas koreksi eksplisit pemilik ke `https://www.nus.edu.sg/gro/global-programmes/summer-and-winter-programmes/summer-programmes-at-nus`. Halaman resmi tersebut berhasil diperiksa dan mencantumkan NUS Enterprise Summer Programme in Entrepreneurship. Koreksi tersimpan dalam `link-corrections.json`; ekstraksi hyperlink asli PDF tetap utuh. Audit ulang tetap lulus: 25 peluang, 100 field, 4 pertanyaan, 20 jawaban, tanpa kegagalan.

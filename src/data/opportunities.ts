@@ -1,6 +1,7 @@
 import type { Opportunity } from '@/types';
 // Names, dates, access notes, and hyperlinks: Panduan Isi Website Kawan Kampus, pp. 4–15.
 // null is deliberate: no URL was supplied for campus-specific channels.
+// Owner corrections are documented separately in docs/link-corrections.json.
 export const opportunities: Opportunity[] = [
   {
     id: 'kampus-organisasi',
@@ -240,7 +241,8 @@ export const opportunities: Opportunity[] = [
       'Program dua minggu di Singapura untuk belajar kewirausahaan lewat kelas, kunjungan, pengembangan ide, dan presentasi bisnis.',
     timing: 'Pendaftaran 1 Februari–31 Maret; kegiatan 6–17 Juli (Acuan 2026).',
     note: 'Mahasiswa lintas jurusan yang tetap terdaftar selama program. Berbayar; tersedia seleksi NUS ASEAN SPARK Fellowship. Cek syarat bahasa serta cakupan pendanaan, termasuk biaya perjalanan.',
-    officialUrl: 'https://enterprise.nus.edu.sg/education-programmes/summer-programme/',
+    officialUrl:
+      'https://www.nus.edu.sg/gro/global-programmes/summer-and-winter-programmes/summer-programmes-at-nus',
     ctaLabel: 'Kunjungi Website Resmi',
     sourcePage: 13,
   },

@@ -3072,6 +3072,18 @@ html[data-welcome-pending='true'] [data-welcome-cover] {
 .program-visual.illustration .program-photo img {
   object-fit: contain;
 }
+.program-visual.poster .program-photo,
+.program-visual.logo .program-photo {
+  background: #fff;
+}
+.program-visual.poster .program-photo img {
+  object-fit: scale-down;
+  padding: 12px;
+}
+.program-visual.logo .program-photo img {
+  object-fit: scale-down;
+  padding: clamp(24px, 4vw, 48px);
+}
 .program-visual figcaption {
   font-size: 10px;
   line-height: 1.6;

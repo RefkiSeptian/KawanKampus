@@ -13,6 +13,16 @@
     "kampus-organisasi",
     "kampus-bantuan"
   ],
+  "linkCorrections": [
+    {
+      "id": "nus",
+      "originalUrl": "https://enterprise.nus.edu.sg/education-programmes/summer-programme/",
+      "correctedUrl": "https://www.nus.edu.sg/gro/global-programmes/summer-and-winter-programmes/summer-programmes-at-nus",
+      "sourcePage": 13,
+      "source": "Koreksi eksplisit pemilik proyek melalui chat, 8 Oktober 2026",
+      "reason": "Pemilik mengganti tautan NUS Enterprise dengan halaman Summer Programmes at NUS; halaman tersebut juga mencantumkan program Enterprise."
+    }
+  ],
   "opportunities": [
     {
       "name": "Organisasi dan kepanitiaan di kampusmu",
@@ -174,7 +184,7 @@
       "note": true,
       "id": "nus",
       "sourcePage": 13,
-      "url": "https://enterprise.nus.edu.sg/education-programmes/summer-programme/"
+      "url": "https://www.nus.edu.sg/gro/global-programmes/summer-and-winter-programmes/summer-programmes-at-nus"
     },
     {
       "name": "HKU Summer Institute",

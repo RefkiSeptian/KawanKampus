@@ -14,6 +14,7 @@ const normalize = (s) =>
     .replace(/[^\p{L}\p{N}]/gu, '');
 const source = normalize(await fs.readFile(file, 'utf8'));
 const linkSource = JSON.parse(await fs.readFile('docs/source-hyperlinks.json', 'utf8'));
+const linkCorrections = JSON.parse(await fs.readFile('docs/link-corrections.json', 'utf8'));
 const failures = [];
 const rows = opportunities.map((item) => {
   const results = Object.fromEntries(
@@ -26,7 +27,19 @@ const rows = opportunities.map((item) => {
     if (!match) failures.push(`${item.id}: ${key}`);
   if (
     item.officialUrl &&
-    !linkSource.links.some((link) => link.uri === item.officialUrl && link.page === item.sourcePage)
+    !linkSource.links.some(
+      (link) => link.uri === item.officialUrl && link.page === item.sourcePage,
+    ) &&
+    !linkCorrections.some(
+      (correction) =>
+        correction.id === item.id &&
+        correction.correctedUrl === item.officialUrl &&
+        correction.sourcePage === item.sourcePage &&
+        correction.source &&
+        linkSource.links.some(
+          (link) => link.uri === correction.originalUrl && link.page === correction.sourcePage,
+        ),
+    )
   )
     failures.push(`${item.id}: URL provenance`);
   for (const resource of item.extraLinks ?? [])
@@ -59,6 +72,7 @@ const report = {
   ),
   officialLinks: opportunities.filter((o) => o.officialUrl).length,
   missingUrls: opportunities.filter((o) => !o.officialUrl).map((o) => o.id),
+  linkCorrections,
   opportunities: rows,
   questions,
   failures,

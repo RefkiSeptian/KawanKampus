@@ -1,20 +1,20 @@
 import type { CategoryId } from '@/types';
-import { officialPhotos, type ProgramPhoto } from './photos';
+import { programPhotos, type ProgramPhoto } from './photos';
 import { homePhotos } from './home';
 
 export const categoryPresentation: Record<CategoryId, { heading: string; photo: ProgramPhoto }> = {
   'organisasi-kepemimpinan': {
     heading: 'Belajar bareng. Bertumbuh bareng.',
-    photo: officialPhotos.aspire,
+    photo: programPhotos.aspire,
   },
-  'lomba-kompetisi': { heading: 'Idemu layak dicoba.', photo: officialPhotos.brandstorm },
+  'lomba-kompetisi': { heading: 'Idemu layak dicoba.', photo: programPhotos.brandstorm },
   'beasiswa-bantuan-kuliah': {
     heading: 'Ada dukungan untuk langkahmu.',
-    photo: illustration('beasiswa-bantuan-kuliah'),
+    photo: programPhotos.satubeasiswa,
   },
   'pengalaman-internasional': {
     heading: 'Buka pandangan. Temui dunia.',
-    photo: illustration('pengalaman-internasional'),
+    photo: programPhotos.nus,
   },
   'dunia-kerja': {
     heading: 'Penasaran kerja? Coba kenali dulu.',
@@ -30,5 +30,5 @@ export function illustration(id: CategoryId): ProgramPhoto {
   };
 }
 export function opportunityPhoto(id: string, category: CategoryId): ProgramPhoto {
-  return officialPhotos[id] || illustration(category);
+  return programPhotos[id] || illustration(category);
 }

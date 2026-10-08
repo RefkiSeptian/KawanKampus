@@ -3,13 +3,14 @@ import { ArrowUpRight, Asterisk } from 'lucide-react';
 import type { ProgramPhoto } from '@/data/photos';
 export function ProgramVisual({ photo, hero = false }: { photo: ProgramPhoto; hero?: boolean }) {
   return (
-    <figure className={`program-visual ${hero ? 'program-visual-hero' : ''} ${photo.kind}`}>
+    <figure
+      className={`program-visual ${hero ? 'program-visual-hero' : ''} ${photo.kind} ${photo.display || 'photo'}`}
+    >
       <div className="program-photo">
         <Image
           src={photo.src}
           alt={photo.alt}
-          width={1000}
-          height={700}
+          fill
           loading={hero ? 'eager' : 'lazy'}
           sizes={hero ? '(max-width: 800px) 90vw, 45vw' : '(max-width: 600px) 90vw, 44vw'}
         />

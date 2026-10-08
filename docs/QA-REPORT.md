@@ -127,3 +127,9 @@ Jelajahi memakai grid tiga kolom/lima kategori plus satu kartu kuis. Pengantar k
 Lint/TypeScript, 24 unit/komponen, dan 22 E2E lulus. Build produksi server E2E lulus. Audit sumber: 25 program, 4 pertanyaan/20 jawaban, nol kegagalan. Pemeriksaan terang/gelap dan viewport 1920,1440,1024,768,390,360 px: nol overflow atau error browser; semua visual termuat.
 
 Lighthouse setelah revisi proposal: mobile 91/100/100/100 dan desktop 100/100/100/100 (Performance/Accessibility/Best Practices/SEO). Server pemeriksaan sementara port 3200 ditutup setelah verifikasi; server development pemilik pada port 3000 tidak dihentikan.
+
+## Tambahan gambar dari pemilik, 8 Oktober 2026
+
+Dua belas gambar dipasang pada kartu program yang sesuai dan dioptimalkan menjadi WebP lokal. Poster/banner dan logo ditampilkan utuh memakai scale-down; foto tetap memakai cover. Gambar Jambi 180 × 180 dan logo Forage 147 × 150 tidak diperbesar melewati resolusi aslinya. Pengantar Beasiswa menggunakan foto SatuBeasiswa; pengantar Internasional memakai foto NUS. Kredit sumber pihak ketiga dibedakan dari sumber resmi. Tautan CTA NUS memakai URL koreksi pemilik dan provenance koreksi diaudit terpisah.
+
+Lint/TypeScript, 24 tes unit/komponen, 22 E2E desktop/mobile, serta build produksi pada server E2E lulus. Audit isi PDF dan koreksi URL lulus. Halaman Beasiswa, Internasional, dan Dunia Kerja diperiksa pada 1440, 768, 390, dan 360 px dalam tema terang/gelap: semua gambar berhasil dimuat, tidak ada overflow atau error console. Screenshot dan laporan ada di work/provided-photos/ serta folder output chat. Lighthouse tidak diulang untuk perubahan ini.
