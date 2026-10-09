@@ -204,7 +204,7 @@ export function HomeMotion({ children, className }: { children: ReactNode; class
         </div>
         <div className={styles.title}>
           <h2 id="welcome-title" aria-label={homeDesign.welcomeTitle}>
-            <BrandWordmark />
+            <BrandWordmark className={styles.welcomeWordmark} />
           </h2>
           <p id="welcome-description">{homeDesign.welcomeDescription}</p>
           <button type="button" onClick={leaveWelcome} className={styles.start}>

@@ -6,7 +6,7 @@
 | ---------------------- | ----------------------------------------------------------------------------------------------------------- |
 | `npm run lint`         | Lulus; ESLint TypeScript, React Hooks, JSX accessibility + TypeScript strict; tanpa warning/error           |
 | `npm run test`         | 38 tes unit/komponen lulus, termasuk seluruh 625 kombinasi jawaban kuis dan integrasi asisten              |
-| `npm run test:e2e`     | 30 tes lulus: desktop 1440 × 1000 dan mobile 390 × 844                                                      |
+| `npm run test:e2e`     | 32 tes lulus: desktop 1440 × 1000 dan mobile 390 × 844                                                      |
 | `npm run build`        | Lulus; 10 route wajib dan metadata routes terbangun; TypeScript lulus                                       |
 | `npm audit`            | 0 kerentanan pada semua dependency termasuk development                                                     |
 | Audit konten           | 25 peluang; 5 per kategori; 100 field sumber cocok; 4 pertanyaan dan 20 jawaban cocok; provenance URL cocok |
@@ -173,3 +173,9 @@ Header menjadi kontrol drag untuk mouse dan sentuhan, dengan pointer capture dan
 Lint/TypeScript, 38 tes unit/komponen, seluruh 30 E2E desktop/mobile, serta build produksi pada server E2E lulus. Empat eksekusi E2E baru memeriksa drag mouse/sentuhan asli melalui CDP Chromium, perpindahan keyboard, posisi setelah reload/resize ke 360 × 640, draft saat minimize/restore, mode besar, reset posisi, dan axe pada panel besar. Tidak ada perubahan provider, API key, konteks program, atau aturan kuis. Pemeriksaan visual dan demo gerakan menggunakan API fixture sehingga tidak memakai kuota Groq.
 
 Mode normal, ringkas, dan besar diperiksa pada 1440,768,390,360 px dalam tema terang/gelap: nol error JS, overflow atau pelanggaran axe pada panel. Screenshot tiap mode dan GIF drag disimpan pada folder output chat; laporan mentah ada di work/chat-window-visual.json. Server verifikasi sementara ditutup setelah pemeriksaan. Lighthouse tidak diulang karena panel tetap dimuat saat dibuka dan perubahan ini berfokus pada interaksi jendela.
+
+## Wordmark utuh pada mobile, 9 Oktober 2026
+
+Tulisan SVG text/textLength pada wordmark diganti outline path dari Inter lokal, weight 800 untuk awan dan 400 untuk kampus. Geometri K, Gold, currentColor, penamaan aksesibel, dan ukuran desktop tetap dipertahankan. ViewBox memiliki margin pada titik terakhir. Footer mendapat max-width dan min-width yang sesuai agar logo tetap berada dalam kolomnya. Cover menggunakan kelas CSS Module eksplisit untuk sizing logo.
+
+Lint/TypeScript, 38 unit/komponen, seluruh 32 E2E, serta build produksi server E2E lulus. Regresi khusus memeriksa seluruh geometri logo berada di dalam viewBox dan viewport pada cover, header serta footer, dengan font WOFF2 sengaja digagalkan; lebar 320,360,390,412,1440 px diperiksa dalam dua profil Chromium. Pemeriksaan visual normal Light/Dark pada 320,360,390,412,768,1440 px tidak menemukan error JS atau overflow. Wordmark lengkap termasuk us dan titik terlihat pada screenshot mobile. Ini menggunakan emulasi Chromium; perangkat fisik Samsung/iOS belum diuji. Tidak ada dependency FontTools/Python yang dibutuhkan di aplikasi produksi.

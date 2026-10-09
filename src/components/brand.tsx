@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { awanPath, kampusPath } from '@/assets/brand/wordmark-paths';
 export function KMark({ className = '', size = 40 }: { className?: string; size?: number }) {
   return (
     <svg
@@ -24,33 +25,21 @@ export function Brand({ footer = false }: { footer?: boolean }) {
     </Link>
   );
 }
-export function BrandWordmark() {
+export function BrandWordmark({ className = '' }: { className?: string }) {
   return (
     <svg
-      className="brand-wordmark"
-      viewBox="0 0 280 56"
+      className={`brand-wordmark ${className}`.trim()}
+      viewBox="0 0 282 56"
       width="175"
       height="34"
       aria-hidden="true"
       focusable="false"
+      preserveAspectRatio="xMidYMid meet"
     >
       <path fill="#F7BB17" d="M0 5h9v16L24 5h13L18 27H0V5Z M0 31h18l19 22H24L9 37v16H0V31Z" />
-      <text
-        x="35"
-        y="43"
-        fill="currentColor"
-        fontFamily="var(--font-inter), sans-serif"
-        fontSize="50"
-        letterSpacing="-3"
-        textLength="245"
-        lengthAdjust="spacingAndGlyphs"
-      >
-        <tspan fontWeight="800">awan</tspan>
-        <tspan fontWeight="400">kampus</tspan>
-        <tspan fill="#F7BB17" fontWeight="700">
-          .
-        </tspan>
-      </text>
+      <path fill="currentColor" d={awanPath} />
+      <path fill="currentColor" d={kampusPath} />
+      <circle cx="277" cy="40" r="3.2" fill="#F7BB17" />
     </svg>
   );
 }

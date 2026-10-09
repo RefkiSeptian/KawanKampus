@@ -2924,6 +2924,13 @@ body:has(.home-reference-page) .site-footer {
   width: 175px;
   height: 34px;
   display: block;
+  max-width: 100%;
+}
+.footer-brand {
+  min-width: 0;
+}
+.footer-main .brand-footer {
+  max-width: 100%;
 }
 @media (max-width: 600px) {
   .site-header .brand .brand-wordmark {

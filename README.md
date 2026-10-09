@@ -54,6 +54,7 @@ Halaman statis/prerendered dipakai untuk konten, dengan komponen client untuk na
 - `src/data/site.ts`: naskah umum, footer, Tentang, dan disclaimer.
 - `src/data/home.ts`: naskah pendukung beranda dan pemetaan foto kategori.
 - `src/data/photos.ts` dan `src/data/presentation.ts`: visual program, judul pengantar, kredit, dan tautan sumber; provenance unduhan ada di `docs/PHOTO-SOURCES.json`.
+- `src/components/brand.tsx` dan `src/assets/brand/wordmark-paths.ts`: logo dengan K khas serta outline tulisan Inter, sehingga seluruh wordmark tetap utuh ketika font belum tersedia di browser mobile. Provenance dan lisensi ada di `docs/LOGO-ASSET.md`.
 - `src/data/social.ts`: placeholder URL Instagram dan X. Ganti nilai `null` dengan URL akun resmi; ikon footer otomatis menjadi tautan. Nilai kosong ditampilkan sebagai ikon nonaktif, tanpa alamat yang ditebak.
 - `src/lib/quiz.ts`: fungsi skor, deteksi seri pada batas dua hasil, validasi sesi, dan resolusi hasil.
 - `src/lib/quiz-session.ts`: state sesi browser; kode jawaban tidak ditampilkan di antarmuka.
