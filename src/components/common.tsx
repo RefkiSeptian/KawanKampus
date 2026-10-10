@@ -13,7 +13,11 @@ export function CategoryCard({ category, index = 0 }: { category: Category; inde
         <span className="card-index">0{index + 1} / 05</span>
         <CategoryIllustration id={category.id} size={48} />
       </div>
-      <ProgramVisual photo={categoryPresentation[category.id].photo} />
+      <ProgramVisual
+        photo={
+          categoryPresentation[category.id].cardPhoto || categoryPresentation[category.id].photo
+        }
+      />
       <h3>{category.name}</h3>
       <p>{category.cardDescription}</p>
       <small className="category-examples">

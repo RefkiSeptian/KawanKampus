@@ -220,13 +220,6 @@
   text-decoration-thickness: 3px;
   text-underline-offset: 8px;
 }
-.quizPoster small {
-  position: absolute;
-  bottom: 24px;
-  left: 44px;
-  font-size: 12px;
-  font-weight: 700;
-}
 .posterSpark {
   position: absolute;
   width: 150px;
@@ -620,9 +613,6 @@
   }
   .quizWords {
     font-size: 49px;
-  }
-  .quizPoster small {
-    left: 30px;
   }
   .posterSpark {
     width: 125px;

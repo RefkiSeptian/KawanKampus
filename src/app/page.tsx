@@ -136,7 +136,6 @@ export default function Home() {
               <span key={line}>{line}</span>
             ))}
           </div>
-          <small>01 / 04</small>
           <Asterisk className={styles.posterSpark} />
         </div>
         <div className={styles.quizCopy}>

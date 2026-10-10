@@ -298,7 +298,6 @@ export function QuizResult() {
           <CategoryIllustration id="beasiswa-bantuan-kuliah" />
         </span>
         <div>
-          <span className="eyebrow">Untuk setiap minat</span>
           <h2>{quizCopy.scholarshipTitle}</h2>
           <p>{quizCopy.scholarshipDescription}</p>
           <Link className="text-link" href="/peluang/beasiswa-bantuan-kuliah">

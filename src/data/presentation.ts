@@ -2,7 +2,10 @@ import type { CategoryId } from '@/types';
 import { programPhotos, type ProgramPhoto } from './photos';
 import { homePhotos } from './home';
 
-export const categoryPresentation: Record<CategoryId, { heading: string; photo: ProgramPhoto }> = {
+export const categoryPresentation: Record<
+  CategoryId,
+  { heading: string; photo: ProgramPhoto; cardPhoto?: ProgramPhoto }
+> = {
   'organisasi-kepemimpinan': {
     heading: 'Belajar bareng. Bertumbuh bareng.',
     photo: programPhotos.aspire,
@@ -19,6 +22,7 @@ export const categoryPresentation: Record<CategoryId, { heading: string; photo: 
   'dunia-kerja': {
     heading: 'Penasaran kerja? Coba kenali dulu.',
     photo: illustration('dunia-kerja'),
+    cardPhoto: programPhotos.linkedin,
   },
 };
 export function illustration(id: CategoryId): ProgramPhoto {

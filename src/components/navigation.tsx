@@ -112,7 +112,6 @@ export function Navigation() {
             </Link>
           ))}
         </nav>
-        <p className="muted">Satu langkah kecil. Banyak kemungkinan.</p>
       </dialog>
     </>
   );
